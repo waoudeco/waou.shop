@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">WAOU! | Producto</title>
+  <meta id="metaDescription" name="description" content="Objeto decorativo exclusivo fabricado en Colombia por WAOU!.">
+  <meta name="theme-color" content="#E10600">
+
+  <!-- Open Graph -->
+  <meta id="ogTitle" property="og:title" content="WAOU! - Objeto Decorativo">
+  <meta id="ogDescription" property="og:description" content="Diseño y fabricación en PLA Bio-Polímero. Envíos a toda Colombia.">
+  <meta id="ogImage" property="og:image" content="logos/WAOU Logo rojo.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="logos/WAOU Logo rojo.svg">
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- jsPDF & AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Estilos Globales -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .product-landing-wrap {
+      padding: 30px 0 60px;
+    }
+
+    .breadcrumb-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb-bar a {
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .breadcrumb-bar a:hover {
+      color: var(--accent-red);
+    }
+
+    .product-landing-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .landing-gallery-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 90px;
+    }
+
+    .landing-main-image-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+      background-color: #FFFFFF;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .landing-main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform var(--transition-smooth);
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.08));
+    }
+
+    .landing-main-image-box:hover .landing-main-image {
+      transform: scale(1.05);
+    }
+
+    .landing-thumbs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .landing-thumb-btn {
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-xs);
+      border: 2px solid var(--border-light);
+      background-color: #FFFFFF;
+      padding: 4px;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+
+    .landing-thumb-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .landing-thumb-btn:hover {
+      border-color: var(--text-primary);
+    }
+
+    .landing-thumb-btn.active {
+      border-color: var(--accent-red);
+      box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.2);
+    }
+
+    .landing-buy-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 32px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .landing-title {
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-family: var(--font-heading);
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .landing-price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 14px 18px;
+      background-color: #F8FAFC;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+    }
+
+    .landing-price-main {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-red);
+    }
+
+    .landing-price-secondary {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .landing-spec-card {
+      background-color: #F8FAFC;
+      border: 1px dashed var(--border-light);
+      border-radius: var(--radius-xs);
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .landing-actions-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .landing-share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .landing-share-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .mobile-sticky-buy-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #FFFFFF;
+      border-top: 1px solid var(--border-light);
+      padding: 12px 20px;
+      z-index: 100;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .product-landing-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .landing-gallery-container {
+        position: static;
+      }
+      .landing-buy-panel {
+        padding: 20px;
+      }
+      .mobile-sticky-buy-bar {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-bar-announcement">
+        <span class="flag">🇨🇴</span>
+        <span><strong>Envíos seguros a toda Colombia</strong> | ¿Compras desde el exterior para regalar en Colombia?</span>
+      </div>
+      <div class="top-bar-actions">
+        <div class="currency-selector-wrap">
+          <label for="currencySelectTop" class="currency-label">Moneda:</label>
+          <select id="currencySelectTop" class="currency-select" aria-label="Seleccionar divisa">
+            <option value="COP">COP ($ Pesos)</option>
+            <option value="USD">USD (US$ Dólares)</option>
+            <option value="EUR">EUR (€ Euros)</option>
+            <option value="MXN">MXN (Mex$ Pesos)</option>
+            <option value="CAD">CAD (CA$ Dólares)</option>
+            <option value="CLP">CLP (CLP$ Pesos)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar" aria-label="Navegación principal">
+        <a href="index.html" class="brand-logo-link" aria-label="WAOU! Inicio">
+          <img src="logos/WAOU Logo rojo.svg" alt="WAOU! Logo" class="brand-logo-img" width="135" height="40">
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">🏠 Ir al Catálogo Completo</a></li>
+          <li><a href="index.html#personalizados" class="nav-link">🛠️ Diseños a Medida</a></li>
+          <li><a href="https://wa.me/573235842247" target="_blank" class="nav-link">📱 Asesor WhatsApp</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button type="button" class="cart-toggle-btn" onclick="cartManager.openCartDrawer()" aria-label="Abrir carrito">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge">0</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal de la Landing Page de Producto -->
+  <main class="product-landing-wrap">
+    <div class="container">
+      
+      <!-- Migas de pan / Volver -->
+      <nav class="breadcrumb-bar" aria-label="Ruta de navegación">
+        <a href="index.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Catálogo WAOU!
+        </a>
+        <span>/</span>
+        <span id="breadcrumbCategory" style="color: var(--text-secondary);">Colección</span>
+        <span>/</span>
+        <span id="breadcrumbTitle" style="color: var(--text-primary); font-weight: 600;">Producto</span>
+      </nav>
+
+      <!-- Rejilla de Producto: Galería 1:1 + Panel de Compra -->
+      <div class="product-landing-grid">
+        
+        <!-- Galería 1:1 Cuadrada -->
+        <div class="landing-gallery-container">
+          <div class="landing-main-image-box">
+            <div id="landingBadgeWrap" style="position: absolute; top: 16px; left: 16px; z-index: 2;"></div>
+            <img id="landingMainImg" src="logos/WAOU Logo rojo.svg" alt="Producto WAOU!" class="landing-main-image">
+          </div>
+
+          <div id="landingThumbsGrid" class="landing-thumbs-grid"></div>
+        </div>
+
+        <!-- Panel de Compra y Especificaciones Técnicas -->
+        <div class="landing-buy-panel">
+          
+          <div>
+            <span id="landingCategoryTag" class="section-tag" style="margin-bottom: 6px;">Colección</span>
+            <h1 id="landingProductName" class="landing-title">Cargando producto...</h1>
+          </div>
+
+          <!-- Caja de Precios con Moneda Base COP y Conversión -->
+          <div class="landing-price-box">
+            <span id="landingPriceMain" class="landing-price-main">$0 COP</span>
+            <span id="landingPriceSec" class="landing-price-secondary">(Precio base en COP)</span>
+          </div>
+
+          <!-- Ficha Técnica -->
+          <div class="landing-spec-card">
+            📐 <strong>DIMENSIONES:</strong> <span id="landingDimensions">-</span><br>
+            🛠️ <strong>MATERIAL:</strong> <span id="landingMaterial">PLA Bio-Polímero de Alta Resistencia</span><br>
+            🇨🇴 <strong>ORIGEN & ENVÍO:</strong> Diseñado y fabricado en Colombia (Envío incluido)
+          </div>
+
+          <!-- Descripción -->
+          <p id="landingDescription" style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+            Cargando detalles de la pieza...
+          </p>
+
+          <!-- Selector de Circuito F1 si aplica -->
+          <div id="landingCircuitGroup" class="option-group" style="display: none;">
+            <label class="option-label">1. Selecciona el Circuito / Gran Premio:</label>
+            <select id="landingCircuitSelect" class="form-select" style="font-family: var(--font-mono); font-weight: 600;" onchange="currentOptions.circuit = this.value">
+            </select>
+          </div>
+
+          <!-- Opciones de Medida / Escala si aplica -->
+          <div id="landingSizeGroup" class="option-group" style="display: none;">
+            <label class="option-label">2. Medida / Escala:</label>
+            <div id="landingSizesContainer" class="size-pill-group"></div>
+          </div>
+
+          <!-- Opciones de Acabado / Color -->
+          <div id="landingFinishGroup" class="option-group" style="display: none;">
+            <label id="landingFinishLabel" class="option-label">3. Acabado / Color:</label>
+            <div id="landingFinishesContainer" class="finish-pill-group"></div>
+          </div>
+
+          <!-- Grabado Personalizado -->
+          <div class="option-group">
+            <label class="option-label">Grabado Personalizado en Base (Opcional - Gratis):</label>
+            <input type="text" id="landingCustomTextInput" class="form-input" placeholder="Ej: Nombre, fecha especial o dedicatoria..." maxlength="50">
+          </div>
+
+          <!-- Botones de Acción / Compra Rápida -->
+          <div class="landing-actions-group">
+            <button type="button" class="btn-primary" onclick="buyLandingProductNow()" style="width: 100%; padding: 14px; font-size: 0.95rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              Comprar Ahora y Generar Orden en PDF
+            </button>
+
+            <button type="button" class="btn-secondary" onclick="addLandingProductToCart()" style="width: 100%;">
+              Añadir al Carrito y Seguir Viendo
+            </button>
+          </div>
+
+          <!-- Compartir y Valores Rápidos -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 0.78rem; color: var(--accent-green); font-weight: 600;">
+              ✓ Envíos protegidos a toda Colombia
+            </span>
+            <button type="button" class="landing-share-btn" onclick="copyLandingLink()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              Compartir este producto
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Barra Fija Inferior en Móvil para Compra Inmediata -->
+  <div class="mobile-sticky-buy-bar">
+    <div>
+      <span id="mobileStickyPrice" style="font-family: var(--font-mono); font-weight: 700; font-size: 1.15rem; color: var(--accent-red);">$0 COP</span>
+      <span style="display: block; font-size: 0.7rem; color: var(--text-secondary);">Envío incluido</span>
+    </div>
+    <button type="button" class="btn-primary btn-sm" onclick="buyLandingProductNow()" style="padding: 10px 18px;">
+      Comprar en WhatsApp
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <img src="logos/WAOU Logo blanco.svg" alt="WAOU!" class="footer-logo">
+          <p class="footer-text">
+            Taller de manufactura y diseño tridimensional en Colombia. Pasión por la Fórmula 1 y el arte decorativo.
+          </p>
+        </div>
+        <div>
+          <h4 class="footer-title">Enlaces</h4>
+          <ul class="footer-links">
+            <li><a href="index.html" class="footer-link">Catálogo Completo</a></li>
+            <li><a href="index.html#personalizados" class="footer-link">Diseño a Medida</a></li>
+            <li><a href="https://wa.me/573235842247" target="_blank" class="footer-link">WhatsApp Ventas</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Medios de Pago</h4>
+          <ul class="footer-links">
+            <li class="footer-link">📱 Nequi / Daviplata</li>
+            <li class="footer-link">🏦 Bancolombia Transferencia</li>
+            <li class="footer-link">💳 PSE y Envíos Nacionales</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Atención</h4>
+          <p class="footer-text">
+            WhatsApp: +57 323 584 2247<br>
+            Colombia
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 <strong>WAOU!</strong> Objetos Decorativos.</div>
+        <div>Base oficial en COP ($)</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Drawer del Carrito -->
+  <div id="cartDrawerBackdrop" class="drawer-backdrop" onclick="cartManager.closeCartDrawer()"></div>
+  <aside id="cartDrawer" class="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title">Tu Carrito de Compra</h3>
+      <button class="cart-drawer-close-btn" onclick="cartManager.closeCartDrawer()">&times;</button>
+    </div>
+    <div id="cartItemsContainer" class="cart-drawer-body"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-summary-row">
+        <span>Total:</span>
+        <span id="cartSubtotalValue" class="cart-summary-total-val">$0 COP</span>
+      </div>
+      <button id="openCheckoutModalBtn" class="btn-primary" onclick="openCheckoutModal()" style="width: 100%;">
+        Continuar con Datos de Envío
+      </button>
+    </div>
+  </aside>
+
+  <!-- Modal de Checkout & Guía de Envío -->
+  <div id="checkoutModalBackdrop" class="modal-backdrop" onclick="closeCheckoutModal()">
+    <div class="checkout-modal" onclick="event.stopPropagation()">
+      <div class="checkout-modal-header">
+        <div>
+          <h3 class="checkout-modal-title">Finalizar Orden de Compra</h3>
+          <p class="checkout-modal-subtitle">Generaremos tu PDF formal y la Guía de Despacho para el WhatsApp de WAOU!.</p>
+        </div>
+        <button class="cart-drawer-close-btn" onclick="closeCheckoutModal()">&times;</button>
+      </div>
+      <form onsubmit="handleCheckoutFormSubmit(event)">
+        <div class="checkout-modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="shipName" class="form-label">Nombre y Apellido <span class="required">*</span></label>
+              <input type="text" id="shipName" class="form-input" placeholder="Ej: Carlos Gómez" required>
+            </div>
+            <div class="form-group">
+              <label for="shipPhone" class="form-label">WhatsApp / Celular <span class="required">*</span></label>
+              <input type="tel" id="shipPhone" class="form-input" placeholder="Ej: 300 123 4567" required>
+            </div>
+            <div class="form-group">
+              <label for="shipDepartment" class="form-label">Departamento <span class="required">*</span></label>
+              <input type="text" id="shipDepartment" class="form-input" placeholder="Ej: Antioquia" required>
+            </div>
+            <div class="form-group">
+              <label for="shipCity" class="form-label">Ciudad <span class="required">*</span></label>
+              <input type="text" id="shipCity" class="form-input" placeholder="Ej: Medellín" required>
+            </div>
+            <div class="form-group full-width">
+              <label for="shipAddress" class="form-label">Dirección Exacta de Entrega <span class="required">*</span></label>
+              <input type="text" id="shipAddress" class="form-input" placeholder="Ej: Calle 10 # 43E - 20 Apto 402" required>
+            </div>
+            <div class="form-group">
+              <label for="shipEmail" class="form-label">Correo (Opcional)</label>
+              <input type="email" id="shipEmail" class="form-input" placeholder="correo@ejemplo.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 24px;">
+                <input type="checkbox" id="shipIsGift" style="width: 18px; height: 18px; accent-color: var(--accent-red);">
+                <span>🎁 ¿Es un regalo?</span>
+              </label>
+            </div>
+            <div class="form-group full-width">
+              <label for="shipNotes" class="form-label">Notas / Instrucciones</label>
+              <textarea id="shipNotes" class="form-textarea" placeholder="Indicaciones para la entrega..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="checkout-modal-footer">
+          <button type="submit" class="btn-whatsapp">
+            Descargar PDF & Enviar Guía por WhatsApp
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/currency.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/order-pdf.js"></script>
+
+  <script>
+    let currentProduct = null;
+    let currentOptions = {
+      size: "",
+      sizePriceModifier: 0,
+      circuit: "",
+      finish: "",
+      customText: ""
+    };
+
+    function loadProductFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      let productId = params.get("id");
+
+      if (!productId && window.location.hash) {
+        productId = window.location.hash.replace("#", "");
+      }
+
+      if (!productId && PRODUCTS_DATA.length > 0) {
+        productId = PRODUCTS_DATA[0].id;
+      }
+
+      currentProduct = getProductById(productId) || PRODUCTS_DATA[0];
+      if (!currentProduct) return;
+
+      document.title = `${currentProduct.name} | WAOU! Colección`;
+      const titleEl = document.getElementById("landingProductName");
+      const breadcrumbTitle = document.getElementById("breadcrumbTitle");
+      const breadcrumbCat = document.getElementById("breadcrumbCategory");
+      const categoryTag = document.getElementById("landingCategoryTag");
+      const dimEl = document.getElementById("landingDimensions");
+      const matEl = document.getElementById("landingMaterial");
+      const descEl = document.getElementById("landingDescription");
+      const mainImg = document.getElementById("landingMainImg");
+      const badgeWrap = document.getElementById("landingBadgeWrap");
+
+      if (titleEl) titleEl.textContent = currentProduct.name;
+      if (breadcrumbTitle) breadcrumbTitle.textContent = currentProduct.name;
+      if (breadcrumbCat) breadcrumbCat.textContent = currentProduct.categoryName;
+      if (categoryTag) categoryTag.textContent = currentProduct.categoryName;
+      if (dimEl) dimEl.textContent = currentProduct.dimensions;
+      if (matEl) matEl.textContent = currentProduct.material;
+      if (descEl) descEl.textContent = currentProduct.description;
+      if (mainImg) mainImg.src = currentProduct.image;
+
+      if (badgeWrap) {
+        if (currentProduct.badge) {
+          const bClass = currentProduct.badge.type === "limited" ? "badge-limited" : "badge-new";
+          badgeWrap.innerHTML = `<span class="${bClass}">${currentProduct.badge.text}</span>`;
+        } else {
+          badgeWrap.innerHTML = "";
+        }
+      }
+
+      // Miniaturas
+      const thumbsContainer = document.getElementById("landingThumbsGrid");
+      const gallery = currentProduct.gallery && currentProduct.gallery.length > 0 ? currentProduct.gallery : [currentProduct.image];
+      if (thumbsContainer) {
+        thumbsContainer.innerHTML = gallery.map((img, idx) => `
+          <button type="button" class="landing-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="switchLandingImage('${img}', this)">
+            <img src="${img}" alt="${currentProduct.name}">
+          </button>
+        `).join("");
+      }
+
+      // Circuitos F1
+      const circuitGroup = document.getElementById("landingCircuitGroup");
+      const circuitSelect = document.getElementById("landingCircuitSelect");
+      if (currentProduct.circuits && currentProduct.circuits.length > 0) {
+        currentOptions.circuit = currentProduct.circuits[0];
+        if (circuitSelect) {
+          circuitSelect.innerHTML = currentProduct.circuits.map(c => `
+            <option value="${c}">${c}</option>
+          `).join("");
+        }
+        if (circuitGroup) circuitGroup.style.display = "flex";
+      } else {
+        if (circuitGroup) circuitGroup.style.display = "none";
+      }
+
+      // Tamaños / Escalas
+      const sizeContainer = document.getElementById("landingSizesContainer");
+      const sizeGroup = document.getElementById("landingSizeGroup");
+      if (currentProduct.sizes && currentProduct.sizes.length > 0) {
+        currentOptions.size = currentProduct.sizes[0].name;
+        currentOptions.sizePriceModifier = currentProduct.sizes[0].priceModifier;
+        if (sizeContainer) {
+          sizeContainer.innerHTML = currentProduct.sizes.map((s, idx) => `
+            <button type="button" class="option-pill ${idx === 0 ? 'selected' : ''}" onclick="selectLandingSize('${s.name}', ${s.priceModifier}, this)">
+              ${s.name} ${s.priceModifier > 0 ? `(+ $${s.priceModifier.toLocaleString('es-CO')})` : ''}
+            </button>
+          `).join("");
+        }
+        if (sizeGroup) sizeGroup.style.display = "flex";
+      } else {
+        if (sizeGroup) sizeGroup.style.display = "none";
+      }
+
+      // Acabados
+      const finishContainer = document.getElementById("landingFinishesContainer");
+      const finishGroup = document.getElementById("landingFinishGroup");
+      const finishLabel = document.getElementById("landingFinishLabel");
+      if (currentProduct.finishes && currentProduct.finishes.length > 0) {
+        currentOptions.finish = currentProduct.finishes[0];
+        if (finishLabel) {
+          finishLabel.textContent = currentProduct.circuits ? "2. Acabado de la Llanta / Compuesto:" : "Acabado / Color:";
+        }
+        if (finishContainer) {
+          finishContainer.innerHTML = currentProduct.finishes.map((f, idx) => `
+            <button type="button" class="option-pill ${idx === 0 ? 'selected' : ''}" onclick="selectLandingFinish('${f}', this)">
+              ${f}
+            </button>
+          `).join("");
+        }
+        if (finishGroup) finishGroup.style.display = "flex";
+      } else {
+        if (finishGroup) finishGroup.style.display = "none";
+      }
+
+      updateLandingPrice();
+    }
+
+    function switchLandingImage(imgSrc, btn) {
+      const mainImg = document.getElementById("landingMainImg");
+      if (mainImg) {
+        mainImg.style.opacity = "0";
+        setTimeout(() => {
+          mainImg.src = imgSrc;
+          mainImg.style.opacity = "1";
+        }, 150);
+      }
+      document.querySelectorAll(".landing-thumb-btn").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+    }
+
+    function selectLandingSize(sizeName, modifier, btn) {
+      currentOptions.size = sizeName;
+      currentOptions.sizePriceModifier = modifier;
+      if (btn && btn.parentElement) {
+        btn.parentElement.querySelectorAll(".option-pill").forEach(p => p.classList.remove("selected"));
+        btn.classList.add("selected");
+      }
+      updateLandingPrice();
+    }
+
+    function selectLandingFinish(finishName, btn) {
+      currentOptions.finish = finishName;
+      if (btn && btn.parentElement) {
+        btn.parentElement.querySelectorAll(".option-pill").forEach(p => p.classList.remove("selected"));
+        btn.classList.add("selected");
+      }
+    }
+
+    function updateLandingPrice() {
+      if (!currentProduct) return;
+      const totalCOP = currentProduct.priceCOP + currentOptions.sizePriceModifier;
+      const mainPriceEl = document.getElementById("landingPriceMain");
+      const secPriceEl = document.getElementById("landingPriceSec");
+      const mobilePriceEl = document.getElementById("mobileStickyPrice");
+
+      if (mainPriceEl) mainPriceEl.textContent = formatPrice(totalCOP);
+      if (secPriceEl) secPriceEl.textContent = getSecondaryPriceText(totalCOP);
+      if (mobilePriceEl) mobilePriceEl.textContent = formatPrice(totalCOP);
+    }
+
+    function addLandingProductToCart() {
+      if (!currentProduct) return;
+      const circuitSelect = document.getElementById("landingCircuitSelect");
+      if (circuitSelect && currentProduct.circuits) currentOptions.circuit = circuitSelect.value;
+
+      const textInput = document.getElementById("landingCustomTextInput");
+      if (textInput) currentOptions.customText = textInput.value.trim();
+
+      cartManager.addItem(currentProduct, currentOptions, 1);
+    }
+
+    function buyLandingProductNow() {
+      addLandingProductToCart();
+      openCheckoutModal();
+    }
+
+    function openCheckoutModal() {
+      cartManager.closeCartDrawer();
+      const backdrop = document.getElementById("checkoutModalBackdrop");
+      if (backdrop) backdrop.classList.add("open");
+    }
+
+    function closeCheckoutModal() {
+      const backdrop = document.getElementById("checkoutModalBackdrop");
+      if (backdrop) backdrop.classList.remove("open");
+    }
+
+    function handleCheckoutFormSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("shipName").value.trim();
+      const phone = document.getElementById("shipPhone").value.trim();
+      const email = document.getElementById("shipEmail").value.trim();
+      const department = document.getElementById("shipDepartment").value.trim();
+      const city = document.getElementById("shipCity").value.trim();
+      const address = document.getElementById("shipAddress").value.trim();
+      const notes = document.getElementById("shipNotes").value.trim();
+      const isGift = document.getElementById("shipIsGift").checked;
+
+      if (!name || !phone || !department || !city || !address) {
+        alert("Por favor completa los campos obligatorios (*)");
+        return;
+      }
+
+      processOrderCheckout({ name, phone, email, department, city, address, notes, isGift });
+    }
+
+    function copyLandingLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        cartManager.showToast("¡Enlace del producto copiado al portapapeles!");
+      }).catch(() => {
+        prompt("Copia este enlace para compartir:", window.location.href);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initCurrencySelector();
+      loadProductFromUrl();
+
+      document.addEventListener("waou:currencyChange", () => {
+        updateLandingPrice();
+      });
+    });
+  </script>
+</body>
+</html>
