@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAOU! | Objetos Decorativos & F1 Collectibles | Hecho en Colombia</title>
+  <meta name="description"
+    content="Diseño y fabricación de objetos decorativos y piezas coleccionables de F1 en Colombia. Compras directas a WhatsApp con orden en PDF.">
+  <meta name="theme-color" content="#E10600">
+
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WAOU! - Objetos Decorativos & F1 Collectibles">
+  <meta property="og:description"
+    content="Piezas decorativas de precisión, arte y pasión por los detalles. Envíos a toda Colombia.">
+  <meta property="og:image" content="WAOU Logo rojo.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="WAOU Logo rojo.svg">
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- jsPDF & AutoTable para generación de PDF de la orden en el cliente -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Estilos del Sistema de Diseño -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- ==========================================================================
+       TOP ANNOUNCEMENT BAR (Envíos Colombia + Multi-moneda)
+       ========================================================================== -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-bar-announcement">
+        <span class="flag">🇨🇴</span>
+        <span><strong>Envíos seguros a toda Colombia</strong> | ¿Compras desde el exterior para regalar en Colombia?
+          Consulta el estimado en tu divisa:</span>
+      </div>
+      <div class="top-bar-actions">
+        <div class="currency-selector-wrap">
+          <label for="currencySelectTop" class="currency-label">Moneda:</label>
+          <select id="currencySelectTop" class="currency-select" aria-label="Seleccionar divisa de visualización">
+            <option value="COP">COP ($ Pesos)</option>
+            <option value="USD">USD (US$ Dólares)</option>
+            <option value="EUR">EUR (€ Euros)</option>
+            <option value="MXN">MXN (Mex$ Pesos)</option>
+            <option value="CAD">CAD (CA$ Dólares)</option>
+            <option value="CLP">CLP (CLP$ Pesos)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       HEADER & NAVBAR
+       ========================================================================== -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar" aria-label="Navegación principal">
+
+        <!-- Logo Oficial WAOU! -->
+        <a href="#inicio" class="brand-logo-link" aria-label="WAOU! Inicio">
+          <img src="WAOU Logo rojo.svg" alt="WAOU! Logo" class="brand-logo-img" width="135" height="40">
+        </a>
+
+        <!-- Enlaces de navegación escritorio -->
+        <ul class="nav-links">
+          <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+          <li><a href="#catalogo" class="nav-link" onclick="filterByNav('f1-motorsport')">F1 & Motorsport</a></li>
+          <li><a href="#catalogo" class="nav-link" onclick="filterByNav('coleccionables')">Coleccionables</a></li>
+          <li><a href="#personalizados" class="nav-link">Personalizados</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+        </ul>
+
+        <!-- Acciones: Buscador, Carrito y Menú Móvil -->
+        <div class="nav-actions">
+
+          <div class="search-box">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="productSearchInput" class="search-input" placeholder="Buscar objetos..."
+              aria-label="Buscar productos">
+          </div>
+
+          <!-- Botón de Carrito con Contador Dinámico -->
+          <button type="button" class="cart-toggle-btn" onclick="cartManager.openCartDrawer()"
+            aria-label="Abrir carrito de compras">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge">0</span>
+          </button>
+
+          <!-- Botón Hamburguesa Móvil -->
+          <button type="button" class="mobile-menu-btn" onclick="toggleMobileMenu()"
+            aria-label="Abrir menú de navegación">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Drawer Móvil -->
+  <div id="mobileMenuDrawer" class="drawer-backdrop" onclick="toggleMobileMenu()">
+    <div class="cart-drawer" style="max-width: 300px; left: 0; right: auto; transform: translateX(-100%);"
+      onclick="event.stopPropagation()">
+      <div class="cart-drawer-header">
+        <img src="WAOU Logo rojo.svg" alt="WAOU!" style="height: 28px;">
+        <button class="cart-drawer-close-btn" onclick="toggleMobileMenu()">&times;</button>
+      </div>
+      <div class="cart-drawer-body" style="padding: 20px;">
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 18px;">
+          <li><a href="#inicio" class="nav-link" onclick="toggleMobileMenu()">🏠 Inicio</a></li>
+          <li><a href="#catalogo" class="nav-link" onclick="filterByNav('f1-motorsport'); toggleMobileMenu();">🏎️ F1 &
+              Motorsport</a></li>
+          <li><a href="#catalogo" class="nav-link" onclick="filterByNav('coleccionables'); toggleMobileMenu();">🏆
+              Coleccionables</a></li>
+          <li><a href="#personalizados" class="nav-link" onclick="toggleMobileMenu()">🛠️ Personalizados</a></li>
+          <li><a href="#contacto" class="nav-link" onclick="toggleMobileMenu()">📱 WhatsApp Asesor</a></li>
+        </ul>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light);">
+          <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 8px;">Cambiar
+            moneda:</span>
+          <select class="currency-select" style="width: 100%; padding: 8px;" onchange="setCurrency(this.value)">
+            <option value="COP">COP ($ Pesos Colombianos)</option>
+            <option value="USD">USD (US$ Dólares)</option>
+            <option value="EUR">EUR (€ Euros)</option>
+            <option value="MXN">MXN (Mex$ Pesos)</option>
+            <option value="CAD">CAD (CA$ Dólares)</option>
+            <option value="CLP">CLP (CLP$ Pesos)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="inicio">
+    <!-- ==========================================================================
+         HERO SECTION: CARRUSEL DE BANNERS LIMPIO (Sin letras, transiciones elegantes)
+         ========================================================================== -->
+    <section class="hero-banner-section" aria-label="Banners destacados">
+      <div class="hero-carousel-wrapper">
+
+        <!-- Contenedor de Slides -->
+        <div id="heroCarouselSlides" style="width: 100%; height: 100%;">
+          <!-- Inyectado por initHeroCarousel() -->
+        </div>
+
+        <!-- Botones de Navegación del Carrusel -->
+        <button type="button" class="hero-carousel-nav-btn hero-carousel-prev" onclick="prevHeroSlide()"
+          aria-label="Banner anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="hero-carousel-nav-btn hero-carousel-next" onclick="nextHeroSlide()"
+          aria-label="Siguiente banner">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <!-- Indicadores de Puntos -->
+        <div id="heroCarouselDots" class="hero-carousel-indicators">
+          <!-- Inyectado por initHeroCarousel() -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VALUES & TRUST BAR
+         ========================================================================== -->
+    <section class="trust-bar">
+      <div class="container trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div>
+            <h4 class="trust-title">Impresión 3D</h4>
+            <p class="trust-desc">se obtienen a partir de almidón de maíz, yuca y/o caña de azúcar, es Duradero,
+              biodegradable, reciclable y hermoso..</p>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+          </div>
+          <div>
+            <h4 class="trust-title">Envíos a Toda Colombia</h4>
+            <p class="trust-desc">Despachos protegidos a todas las ciudades.</p>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div>
+            <h4 class="trust-title">Ordena Con Seguridad</h4>
+            <p class="trust-desc">Recibe comprobante y guía formal al instante.</p>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="trust-title">Atención en WhatsApp</h4>
+            <p class="trust-desc">Coordinación directa de pagos y entregas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CATALOG SECTION (Imágenes 1:1 Cuadradas Sin Cortes)
+         ========================================================================== -->
+    <section id="catalogo" class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <span class="section-tag">Colección Oficial</span>
+          <h2 class="section-title">Objetos Decorativos & F1 Collectibles</h2>
+          <p class="section-desc">
+            Piezas concebidas para transformar cualquier espacio. Selecciona tus medidas y acabados personalizados.
+          </p>
+        </div>
+
+        <!-- Filtros por Categoría & Ordenamiento -->
+        <div class="catalog-controls">
+          <div class="category-pills">
+            <button type="button" class="category-pill active" data-category="all">Todos los Objetos</button>
+            <button type="button" class="category-pill" data-category="f1-motorsport">F1 & Motorsport</button>
+            <button type="button" class="category-pill" data-category="coleccionables">Cars & Coleccionables</button>
+            <button type="button" class="category-pill" data-category="personalizados">Personalizados</button>
+          </div>
+
+          <div class="catalog-sort">
+            <span id="productsCountLabel" class="badge-mono" style="margin-right: 8px;">Cargando...</span>
+            <select id="catalogSortSelect" class="sort-select" aria-label="Ordenar catálogo">
+              <option value="featured">Destacados</option>
+              <option value="price-low">Precio: Menor a Mayor</option>
+              <option value="price-high">Precio: Mayor a Menor</option>
+              <option value="name-asc">Nombre: A - Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Rejilla Dinámica de Productos (1:1 Cuadrados) -->
+        <div id="productsGrid" class="products-grid">
+          <!-- Renderizado por js/app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN PERSONALIZADOS (Con Galería Interactiva y Cambios Rápidos de Imagen)
+         ========================================================================== -->
+    <section id="personalizados" class="section custom-section">
+      <div class="container custom-grid">
+
+        <!-- Galería Interactiva con Preview 1:1 y Miniaturas -->
+        <div class="custom-showcase-box">
+          <div class="custom-main-preview">
+            <img id="customMainPreviewImg" src="Imagenes/WhatsApp Image 2026-08-31 at 11.52.44 PM (1).jpg"
+              alt="Objeto personalizado WAOU!" class="custom-main-preview-img">
+          </div>
+
+          <div id="customThumbsStrip" class="custom-thumbnails-strip">
+            <!-- Inyectado por initCustomGallery() -->
+          </div>
+        </div>
+
+        <!-- Información y Cotización de Personalizados -->
+        <div>
+          <span class="section-tag">Diseño a Medida</span>
+          <h2 id="customProjectTitle" class="section-title" style="margin: 8px 0 12px;">¿Tienes una idea en mente? La
+            fabricamos</h2>
+          <p id="customProjectDesc" class="section-desc" style="margin-bottom: 20px;">
+            Fabricamos siluetas tridimensionales, logotipos para empresas, trofeos de simracing o regalos corporativos
+            con acabados de alta precisión en biopolímero PLA.
+          </p>
+
+          <div class="custom-features-list">
+            <div class="custom-feature-item">
+              <div class="custom-feature-bullet">1</div>
+              <div>
+                <h4 style="font-size: 0.92rem;">Modelado Digital Previo</h4>
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">Revisas la previsualización 3D antes de
+                  pasar a manufactura.</p>
+              </div>
+            </div>
+
+            <div class="custom-feature-item">
+              <div class="custom-feature-bullet">2</div>
+              <div>
+                <h4 style="font-size: 0.92rem;">Escalas desde 20 cm hasta 1.20 metros</h4>
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">Adaptamos las proporciones a tu pared,
+                  estantería o vitrina.</p>
+              </div>
+            </div>
+
+            <div class="custom-feature-item">
+              <div class="custom-feature-bullet">3</div>
+              <div>
+                <h4 style="font-size: 0.92rem;">Colores y Acabados Especiales</h4>
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">Negro mate titanio, rojo carrera, blanco
+                  minimal o colores corporativos.</p>
+              </div>
+            </div>
+          </div>
+
+          <a href="https://wa.me/573235842247?text=¡Hola%20WAOU!%20👋%20Quiero%20cotizar%20un%20diseño%20personalizado."
+            target="_blank" class="btn-primary" style="padding: 13px 26px; margin-top: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+              </path>
+            </svg>
+            Cotizar Diseño con Asesor por WhatsApp
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN DE CONTACTO & ASESORÍA
+         ========================================================================== -->
+    <section id="contacto" class="section"
+      style="background-color: #FAFAFB; border-top: 1px solid var(--border-light);">
+      <div class="container" style="text-align: center; max-width: 700px;">
+        <span class="section-tag" style="justify-content: center;">Atención Inmediata</span>
+        <h2 class="section-title" style="margin: 10px 0;">¿Tienes dudas sobre medidas, envíos o pagos?</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 1rem;">
+          Estamos listos para asesorarte directamente en Colombia. Nuestro equipo te guiará en la elección o
+          personalización de tu pieza.
+        </p>
+        <div style="display: flex; justify-content: center;">
+          <a href="https://wa.me/573235842247?text=¡Hola%20WAOU!%20👋%20Tengo%20una%20consulta%20sobre%20sus%20productos."
+            target="_blank" class="btn-whatsapp" style="max-width: 320px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 2.08.828 3.224.829h.005c3.18 0 5.767-2.586 5.768-5.766 0-3.18-2.587-5.765-5.767-5.765zm0 10.366c-.98 0-1.94-.265-2.775-.765l-.2-.119-2.062.54.55-2.01-.13-.207c-.55-.873-.84-1.889-.84-2.935 0-2.88 2.345-5.225 5.23-5.225 2.88 0 5.225 2.345 5.225 5.225 0 2.88-2.345 5.226-5.225 5.226zm2.868-3.923c-.157-.078-.928-.458-1.072-.51-.145-.053-.25-.079-.355.078-.105.158-.407.51-.5.615-.092.106-.184.118-.34.04-.158-.079-.667-.246-1.27-.783-.47-.417-.787-.932-.879-1.09-.092-.158-.01-.243.07-.321.07-.07.156-.184.234-.275.078-.092.105-.157.157-.262.053-.105.026-.197-.013-.275-.04-.079-.355-.856-.486-1.173-.128-.308-.258-.266-.355-.271l-.302-.005c-.105 0-.276.04-.42.197-.145.157-.552.539-.552 1.314 0 .775.565 1.524.644 1.63.078.105 1.11 1.696 2.689 2.378.376.162.67.259.898.332.377.12.72.103.991.063.303-.046.928-.38 1.059-.746.132-.368.132-.682.092-.746-.039-.065-.144-.105-.302-.184z" />
+            </svg>
+            Escribir al WhatsApp (+57 323 584 2247)
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-brand-col">
+          <img src="WAOU Logo blanco.svg" alt="WAOU! Logo Blanco" class="footer-logo">
+          <p class="footer-text">
+            Taller de diseño y manufactura tridimensional en Colombia. Pasión por la ingeniería, la Fórmula 1 y el arte
+            decorativo de vanguardia.
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #D1D5DB;">
+            📍 Fabricación y despacho desde Colombia
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Colecciones</h4>
+          <ul class="footer-links">
+            <li><a href="#catalogo" class="footer-link" onclick="filterByNav('f1-motorsport')">F1 & Motorsport</a></li>
+            <li><a href="#catalogo" class="footer-link" onclick="filterByNav('coleccionables')">Coleccionables</a></li>
+            <li><a href="#personalizados" class="footer-link">Proyectos a Medida</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Medios de Pago</h4>
+          <ul class="footer-links">
+            <li class="footer-link">📱 Nequi / Daviplata</li>
+            <li class="footer-link">🏦 Bancolombia / Transferencia</li>
+            <li class="footer-link">💳 PSE & Pagos Seguros</li>
+            <li class="footer-link">📦 Envíos a Toda Colombia</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Atención al Cliente</h4>
+          <p class="footer-text" style="margin-bottom: 10px;">
+            Lunes a Sábado: 8:00 AM - 7:00 PM<br>
+            WhatsApp: +57 323 584 2247
+          </p>
+          <a href="https://wa.me/573235842247" target="_blank" class="btn-whatsapp btn-sm" style="width: auto;">
+            Chat Directo WhatsApp
+          </a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 <strong>WAOU!</strong> Objetos Decorativos. Todos los derechos reservados.
+        </div>
+        <div style="color: #6B7280;">
+          Diseño Tech Pit Stop &bull; Base en COP ($)
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       CART SLIDEOVER / DRAWER
+       ========================================================================== -->
+  <div id="cartDrawerBackdrop" class="drawer-backdrop" onclick="cartManager.closeCartDrawer()"></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-label="Carrito de compras">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-red)" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        Tu Carrito de Compra
+      </h3>
+      <button class="cart-drawer-close-btn" onclick="cartManager.closeCartDrawer()"
+        aria-label="Cerrar carrito">&times;</button>
+    </div>
+
+    <!-- Lista de Productos en el Carrito (1:1 Cuadrados) -->
+    <div id="cartItemsContainer" class="cart-drawer-body">
+      <!-- Inyectado por cartManager.renderCartDrawer() -->
+    </div>
+
+    <!-- Resumen y Botón de Checkout -->
+    <div class="cart-drawer-footer">
+      <div class="cart-summary-row">
+        <span>Ítems seleccionados:</span>
+        <strong id="cartItemsCountSummary">0 productos</strong>
+      </div>
+      <div class="cart-summary-row">
+        <span>Envío a Colombia:</span>
+        <span style="font-family: var(--font-mono); color: var(--accent-green); font-weight: 600;">A coordinar /
+          Contraentrega</span>
+      </div>
+      <div class="cart-summary-row cart-summary-total">
+        <span>Total Estimado:</span>
+        <span id="cartSubtotalValue" class="cart-summary-total-val">$0 COP</span>
+      </div>
+
+      <button id="openCheckoutModalBtn" class="btn-primary" onclick="openCheckoutModal()"
+        style="width: 100%; padding: 13px 20px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        Continuar con Datos de Envío
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       MODAL DE VISTA RÁPIDA / PERSONALIZACIÓN DE PRODUCTO (1:1 Cuadrado)
+       ========================================================================== -->
+  <div id="quickViewBackdrop" class="modal-backdrop" onclick="closeQuickView()">
+    <div id="quickViewModalContent" class="quick-view-modal" onclick="event.stopPropagation()">
+      <!-- Inyectado dinámicamente por openQuickView(id) -->
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DE CHECKOUT & DATOS DE ENVÍO (GUÍA DE DESPACHO COLOMBIA)
+       ========================================================================== -->
+  <div id="checkoutModalBackdrop" class="modal-backdrop" onclick="closeCheckoutModal()">
+    <div class="checkout-modal" onclick="event.stopPropagation()">
+
+      <div class="checkout-modal-header">
+        <div>
+          <h3 class="checkout-modal-title">Agendar tu Pedido Ahora</h3>
+          <!-- ==========================================================================<p class="checkout-modal-subtitle">Generaremos tu archivo PDF formal y te llevaremos a WhatsApp con toda la
+            guía de envío lista.</p>========================================================================== -->
+        </div>
+        <button class="cart-drawer-close-btn" onclick="closeCheckoutModal()" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <form id="checkoutShippingForm" onsubmit="handleCheckoutFormSubmit(event)">
+        <div class="checkout-modal-body">
+          <!-- ==========================================================================
+          <div class="checkout-info-card">
+            <span class="checkout-info-icon">💡</span>
+            <div>
+              <strong>¿Cómo agendar tu pedido?</strong><br>
+              Rellena los campos necesarios, y presiona el botón verde, <strong>tendrás automáticamente tu
+                orden en PDF</strong> y se
+              <strong>abrirá WhatsApp </strong> para que el asesor de WAOU!
+              coordine la Forma de Pago y Fecha de envío.
+            </div>
+          </div>
+========================================================================== -->
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="shipName" class="form-label">Nombre y Apellido <span class="required">*</span></label>
+              <input type="text" id="shipName" class="form-input" placeholder="Ej: Carlos Gómez" required>
+            </div>
+
+            <div class="form-group">
+              <label for="shipPhone" class="form-label">WhatsApp / Celular <span class="required">*</span></label>
+              <input type="tel" id="shipPhone" class="form-input" placeholder="Ej: 300 123 4567" required>
+            </div>
+
+            <div class="form-group">
+              <label for="shipDepartment" class="form-label">Departamento <span class="required">*</span></label>
+              <input type="text" id="shipDepartment" class="form-input"
+                placeholder="Ej: Antioquia, Cundinamarca, Valle..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="shipCity" class="form-label">Ciudad / Municipio <span class="required">*</span></label>
+              <input type="text" id="shipCity" class="form-input" placeholder="Ej: Medellín, Bogotá, Cali..." required>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="shipAddress" class="form-label">Dirección Exacta de Entrega <span
+                  class="required">*</span></label>
+              <input type="text" id="shipAddress" class="form-input"
+                placeholder="Ej: Calle 10 # 43E - 20 Apto 402, Barrio El Poblado" required>
+            </div>
+
+            <div class="form-group">
+              <label for="shipEmail" class="form-label">Correo Electrónico (Opcional)</label>
+              <input type="email" id="shipEmail" class="form-input" placeholder="tucorreo@ejemplo.com">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 24px;">
+                <input type="checkbox" id="shipIsGift"
+                  style="width: 18px; height: 18px; accent-color: var(--accent-red);">
+                <span>🎁 ¿Es un regalo para alguien más?</span>
+              </label>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="shipNotes" class="form-label">Notas Adicionales / Instrucciones de Entrega</label>
+              <textarea id="shipNotes" class="form-textarea"
+                placeholder="Indicaciones para la transportadora, timbre, portería o detalles de personalización..."></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="checkout-modal-footer">
+          <button type="submit" class="btn-whatsapp">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 2.08.828 3.224.829h.005c3.18 0 5.767-2.586 5.768-5.766 0-3.18-2.587-5.765-5.767-5.765zm0 10.366c-.98 0-1.94-.265-2.775-.765l-.2-.119-2.062.54.55-2.01-.13-.207c-.55-.873-.84-1.889-.84-2.935 0-2.88 2.345-5.225 5.23-5.225 2.88 0 5.225 2.345 5.225 5.225 0 2.88-2.345 5.226-5.225 5.226zm2.868-3.923c-.157-.078-.928-.458-1.072-.51-.145-.053-.25-.079-.355.078-.105.158-.407.51-.5.615-.092.106-.184.118-.34.04-.158-.079-.667-.246-1.27-.783-.47-.417-.787-.932-.879-1.09-.092-.158-.01-.243.07-.321.07-.07.156-.184.234-.275.078-.092.105-.157.157-.262.053-.105.026-.197-.013-.275-.04-.079-.355-.856-.486-1.173-.128-.308-.258-.266-.355-.271l-.302-.005c-.105 0-.276.04-.42.197-.145.157-.552.539-.552 1.314 0 .775.565 1.524.644 1.63.078.105 1.11 1.696 2.689 2.378.376.162.67.259.898.332.377.12.72.103.991.063.303-.046.928-.38 1.059-.746.132-.368.132-.682.092-.746-.039-.065-.144-.105-.302-.184z" />
+            </svg>
+            Agendar Mi Pedido Ahora
+          </button>
+          <div style="text-align: center; font-size: 0.78rem; color: var(--text-secondary);">
+            🔒 Tus datos se usan únicamente para generar tu orden de compra y la guía de despacho.
+          </div>
+        </div>
+
+        <div class="checkout-info-card">
+          <span class="checkout-info-icon">💡</span>
+          <div>
+            <strong>¿Cómo agendar tu pedido?</strong><br>
+            Rellena los campos necesarios, y presiona el botón verde, <strong>tendrás automáticamente tu
+              orden en PDF</strong> y se
+            <strong>abrirá WhatsApp </strong> para que el asesor de WAOU!
+            coordine la Forma de Pago y Fecha de envío.
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Scripts Modulares -->
+  <script src="js/products.js"></script>
+  <script src="js/currency.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/order-pdf.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    function filterByNav(category) {
+      const pills = document.querySelectorAll(".category-pill");
+      pills.forEach(p => {
+        if (p.dataset.category === category) {
+          p.classList.add("active");
+        } else {
+          p.classList.remove("active");
+        }
+      });
+      AppState.currentCategory = category;
+      renderProducts();
+    }
+  </script>
+</body>
+
+</html>
