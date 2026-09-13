@@ -277,37 +277,41 @@ async function generateOrderPDF(customerData, cartItems, orderNumber) {
  * Genera el enlace de WhatsApp estructurado con la GUÍA DE DESPACHO
  */
 function buildWhatsAppUrl(customerData, cartItems, orderNumber) {
+  const phoneNumber = "573000000000"; // Reemplaza por tu número de WhatsApp
+
   const totalCOP = cartItems.reduce((sum, item) => sum + (item.unitPriceCOP * item.quantity), 0);
 
   let itemsListText = "";
   cartItems.forEach((item, index) => {
-    let line = `${index + 1}. * ${item.name}* (Cant: ${item.quantity}) \n`;
-    if (item.circuit) line += `   - 🏎️ * Circuito / GP:* ${item.circuit} \n`;
-    if (item.size && item.size !== "Estándar") line += `   - Medida: ${item.size} \n`;
-    if (item.finish) line += `   - Color: ${item.finish} \n`;
-    if (item.customText) line += `   - Grabado: "${item.customText}"\n`;
-    line += `   - Valor: $${(item.unitPriceCOP * item.quantity).toLocaleString("es-CO")} COP\n`;
+    let line = `${index + 1}. *${item.name}*\n`;
+    line += `(Cant: ${item.quantity})\n`;
+    if (item.circuit) line += `🏎️ *Circuito / GP:* ${item.circuit}\n`;
+    if (item.size && item.size !== "Estándar") line += `📏 *Medida:* ${item.size}\n`;
+    if (item.finish) line += `🎨 *Color:* ${item.finish}\n`;
+    if (item.customText) line += `✏️ *Grabado:* "${item.customText}"\n`;
+    line += `💵 *Valor:* $${(item.unitPriceCOP * item.quantity).toLocaleString("es-CO")} COP\n\n`;
     itemsListText += line;
   });
 
-  let message = `¡Hola * WAOU! * 👋 Acabo de generar mi * Orden de Compra #${orderNumber}* desde la página web.\n\n`;
-  message += `📋 * DETALLE DE PRODUCTOS:*\n${itemsListText} \n`;
-  message += `💰 * TOTAL A PAGAR:* $${totalCOP.toLocaleString("es-CO")} COP(Envío incluido) \n\n`;
+  let message = `¡Hola *WAOU!* 👋 Acabo de generar mi Orden de Compra\n`;
+  message += `*#${orderNumber}* desde la página web.\n\n`;
+  message += `📋 *DETALLE DE PRODUCTOS:*\n${itemsListText}`;
+  message += `💰 *TOTAL A PAGAR:* $${totalCOP.toLocaleString("es-CO")} COP (Envío incluido)\n\n`;
 
-  message += `📦 * INFORMACIÓN DE ENVÍO / GUÍA DE DESPACHO:*\n`;
-  message += `• * Destinatario:* ${customerData.name} \n`;
-  message += `• * Teléfono / WhatsApp:* ${customerData.phone} \n`;
-  if (customerData.email) message += `• * Correo:* ${customerData.email} \n`;
-  message += `• * Departamento:* ${customerData.department} \n`;
-  message += `• * Ciudad / Municipio:* ${customerData.city} \n`;
-  message += `• * Dirección Exacta:* ${customerData.address} \n`;
-  if (customerData.notes) message += `• * Observaciones / Notas:* ${customerData.notes} \n`;
-  if (customerData.isGift) message += `• 🎁 * ES UN REGALO * (Por favor despachar sin precios impresos) \n`;
+  message += `📦 *INFORMACIÓN DE ENVÍO / GUÍA DE DESPACHO:*\n`;
+  message += `• *Destinatario:* ${customerData.name}\n`;
+  message += `• *Teléfono / WhatsApp:* ${customerData.phone}\n`;
+  if (customerData.email) message += `• *Correo:* ${customerData.email}\n`;
+  message += `• *Departamento:* ${customerData.department}\n`;
+  message += `• *Ciudad / Municipio:* ${customerData.city}\n`;
+  message += `• *Dirección Exacta:* ${customerData.address}\n`;
+  if (customerData.notes) message += `• *Observaciones / Notas:* ${customerData.notes}\n`;
+  if (customerData.isGift) message += `• 🎁 *ES UN REGALO* (Por favor despachar sin precios impresos)\n`;
 
-  message += `\n📄 * He descargado mi archivo PDF oficial(${orderNumber}.pdf).* Adjunto el comprobante para confirmar el pago e iniciar el despacho.`;
+  // codificación obligatoria para preservar emojis (\uFFFF) y saltos de línea (\n)
+  const encodedMessage = encodeURIComponent(message);
 
-  const encoded = encodeURIComponent(message);
-  return `https://wa.me/${WAOU_CONFIG.whatsappNumber}?text=${encoded}`;
+  return `https://api.whatsapp.com/send?phone=${WAOU_CONFIG.whatsappNumber}&text=${encodedMessage}`;
 }
 
 async function processOrderCheckout(customerData) {

@@ -52,18 +52,20 @@ const PRODUCTS_DATA = [
     categoryName: "F1 & Motorsport",
     priceCOP: 115000,
     dimensions: "DIÁMETRO: 20 cm | ALTO: 20 cm | PROFUNDIDAD: 10 cm",
-    material: "PLA Bio-Polímero Premium",
+    material: "PLA Duradero, biodegradable, reciclable y hermoso",
     image: "Imagenes/polef1.jpg",
     gallery: [
       "Imagenes/polef1.jpg",
       "Imagenes/polef1banner.jpeg",
-      "Imagenes/WhatsApp Image 2026-08-31 at 11.50.41 PM.jpg"
+      "Video/POLE POSITION1.mp4",
+      "Imagenes/Diffsize.jpg",
     ],
     badge: { type: "limited", text: "ENVÍO INCLUIDO 🇨🇴" },
     featured: true,
     description: "Llanta decorativa inspirada en la Formula 1, viene con su base de exhibición, y el envío a toda Colombia está totalmente incluido.",
+    hasEngraving: false,
     circuits: F1_CIRCUITS_LIST,
-    finishes: F1_TIRE_FINISHES
+    //finishes: F1_TIRE_FINISHES
   },
   {
     id: "WAOU-POLE-F1-30CM",
@@ -72,18 +74,20 @@ const PRODUCTS_DATA = [
     categoryName: "F1 & Motorsport",
     priceCOP: 245000,
     dimensions: "DIÁMETRO: 30 cm | ALTO: 30 cm | PROFUNDIDAD: 15 cm",
-    material: "PLA Bio-Polímero Premium",
+    material: "PLA Duradero, biodegradable, reciclable y hermoso",
     image: "Imagenes/polef1.jpg",
     gallery: [
       "Imagenes/polef1.jpg",
       "Imagenes/polef1banner.jpeg",
-      "Imagenes/WhatsApp Image 2026-08-31 at 11.50.41 PM.jpg"
+      "Video/POLE POSITION1.mp4",
+      "Imagenes/Diffsize.jpg",
     ],
     badge: { type: "bestseller", text: "GRAN FORMATO 30CM" },
     featured: true,
     description: "Llanta decorativa de gran formato inspirada en la Formula 1. Presencia imponente de 30 cm de diámetro con base de exhibición pesada. Envío gratis a toda Colombia incluido.",
+    hasEngraving: false,
     circuits: F1_CIRCUITS_LIST,
-    finishes: F1_TIRE_FINISHES
+    //finishes: F1_TIRE_FINISHES//
   },
   {
     id: "WAOU-COPA-PISTON-21CM",
@@ -92,14 +96,19 @@ const PRODUCTS_DATA = [
     categoryName: "Cars & Coleccionables",
     priceCOP: 70000,
     dimensions: "ANCHO: 24 cm | ALTO: 21 cm | PROFUNDIDAD: 12 cm",
-    material: "PLA Bio-Polímero Premium",
+    material: "PLA Duradero, biodegradable, reciclable y hermoso",
     image: "Imagenes/pistoncup.jpg",
     gallery: [
-      "Imagenes/pistoncup.jpg"
+      "Imagenes/pistoncup.jpg",
+      "Imagenes/pistoncup3.png",
+      "Imagenes/pistoncup2.png",
+      "Imagenes/pistoncup1.png",
+      "Video/pistoncupvid1.mp4"
     ],
     badge: { type: "bestseller", text: "TAMAÑO GRANDE" },
     featured: true,
     description: "Copa Pistón inspirada en la Pelicula de Cars, viene con su base, y el envio esta incluido",
+    hasEngraving: true,
     sizes: [
       { name: "Grande 21 cm (ANCHO: 24 cm | ALTO: 21 cm | PROFUNDIDAD: 12 cm)", priceModifier: 0 },
       { name: "Pequeña 16 cm (ANCHO: 20 cm | ALTO: 16 cm | PROFUNDIDAD: 9 cm)", priceModifier: -15000 }
@@ -113,19 +122,76 @@ const PRODUCTS_DATA = [
     categoryName: "Cars & Coleccionables",
     priceCOP: 55000,
     dimensions: "ANCHO: 20 cm | ALTO: 16 cm | PROFUNDIDAD: 9 cm",
-    material: "PLA Bio-Polímero Premium",
+    material: "PLA Duradero, biodegradable, reciclable y hermoso",
     image: "Imagenes/pistoncup.jpg",
     gallery: [
-      "Imagenes/pistoncup.jpg"
+      "Imagenes/pistoncup.jpg",
+      "Imagenes/pistoncup3.png",
+      "Imagenes/pistoncup2.png",
+      "Imagenes/pistoncup1.png",
+      "Video/pistoncupvid1.mp4"
+
     ],
     badge: { type: "new", text: "ENVÍO INCLUIDO 🇨🇴" },
     featured: true,
     description: "Copa Pistón inspirada en la Pelicula de Cars, viene con su base, y el envio esta incluido",
+    hasEngraving: true,
     sizes: [
       { name: "Pequeña 16 cm (ANCHO: 20 cm | ALTO: 16 cm | PROFUNDIDAD: 9 cm)", priceModifier: 0 },
       { name: "Grande 21 cm (ANCHO: 24 cm | ALTO: 21 cm | PROFUNDIDAD: 12 cm)", priceModifier: 15000 }
     ],
     finishes: PISTON_CUP_FINISHES
+  },
+  {
+    id: "WAOU-CALENDARIO-F1-2026",
+    name: "CALENDARIO F1 2026",
+    category: "f1-motorsport", // "f1-motorsport", "coleccionables", "personalizados"
+    categoryName: "F1 & Motorsport",
+    priceCOP: 50000,
+    dimensions: "LARGO: 25 cm | ALTO: 25 cm | ESPESOR: 2 cm",
+    material: "PLA Duradero, biodegradable, reciclable y hermoso",
+    image: "Imagenes/calendariof1.png",
+    gallery: [
+      "Imagenes/calendariof1.png",
+    ],
+    badge: { type: "limited", text: "EDICIÓN LIMITADA 2026" }, // O null si no lleva badge
+    featured: true,
+    description: "Descripción detallada de la pieza...",
+    hasEngraving: false, // true si admite grabado personalizado en la base, false si no
+    //sizes: [
+    //  { name: "Estándar (30 cm)", priceModifier: 0 },
+    //{ name: "Grande (50 cm)", priceModifier: 50000 }
+    //],
+    //finishes: ["Negro Mate Titanio", "Rojo Carrera F1", "Blanco Minimal"]
+  },
+  {
+    id: "WAOU-BALLON-ORO",
+    name: "BALLON D OR",
+    category: "Futbol", // "f1-motorsport", "coleccionables", "personalizados"
+    categoryName: "Futbol & sport",
+    priceCOP: 70000,
+    dimensions: "LARGO: 25 cm | ALTO: 25 cm | ESPESOR: 2 cm",
+    material: "PLA Duradero, biodegradable, reciclable y hermoso",
+    image: "Imagenes/ballon0.png", // Imagen principal
+    gallery: [
+      "Imagenes/ballon0.png",
+      "Imagenes/ballon1.png",
+      "Imagenes/ballon2.png",
+      "Imagenes/ballon3.png",
+      "Imagenes/ballon4.png",
+      "Imagenes/ballon5.png"
+    ],
+    badge: { type: "limited", text: "Futboleros" }, // O null si no lleva badge
+    featured: true,
+    description: "Descripción detallada de la pieza...",
+    hasEngraving: true, // true si admite grabado personalizado en la base, false si no
+    sizes: [
+
+      { name: "Mediano (15 cm)", priceModifier: 0 },
+      { name: "Pequeño (10 cm)", priceModifier: -15000 },
+      { name: "Grande (20 cm)", priceModifier: 70000 }
+    ],
+    //finishes: ["Negro Mate Titanio", "Rojo Carrera F1", "Blanco Minimal"]
   }
 ];
 

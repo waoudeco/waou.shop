@@ -23,9 +23,9 @@ const AppState = {
 
 // Banners para el carrusel superior (Sin textos, estética limpia)
 const HERO_BANNERS = [
-  { img: "Imagenes/polef1banner.jpeg", alt: "WAOU! F1 Pole Position Banner" },
-  { img: "Imagenes/polef1.jpg", alt: "WAOU! F1 Award Showcase Banner" },
-  { img: "Imagenes/Diffsize.jpg", alt: "WAOU! Esculturas de Pared & Circuitos Banner" }
+  { img: "Imagenes/bannerf1product.jpg", alt: "WAOU! F1 Pole Position Banner" },
+  { img: "Imagenes/llantasbannermarcas1.jpg", alt: "WAOU! F1 Award Showcase Banner" },
+  { img: "Imagenes/polef1banner.jpeg", alt: "WAOU! Esculturas de Pared & Circuitos Banner" }
 ];
 
 // Ejemplos para la galería interactiva de Personalizados (1:1 Cuadrados)
@@ -174,9 +174,9 @@ function renderProducts() {
   let filtered = PRODUCTS_DATA.filter(product => {
     const matchCategory = AppState.currentCategory === "all" || product.category === AppState.currentCategory;
     const q = AppState.searchQuery.toLowerCase().trim();
-    const matchSearch = !q || 
-      product.name.toLowerCase().includes(q) || 
-      product.description.toLowerCase().includes(q) || 
+    const matchSearch = !q ||
+      product.name.toLowerCase().includes(q) ||
+      product.description.toLowerCase().includes(q) ||
       product.categoryName.toLowerCase().includes(q) ||
       product.material.toLowerCase().includes(q);
 
@@ -361,10 +361,12 @@ function openQuickView(productId) {
       ` : ''}
 
       <!-- Grabado personalizado opcional -->
-      <div class="option-group">
-        <label class="option-label">Grabado Personalizado en Base (Opcional - Gratis):</label>
-        <input type="text" id="qvCustomTextInput" class="form-input" placeholder="Ej: Nombre del fanático, fecha especial, dedicatoria..." maxlength="50" oninput="AppState.selectedModalOptions.customText = this.value">
-      </div>
+      ${product.hasEngraving ? `
+        <div class="option-group">
+          <label class="option-label">Grabado Personalizado en Base (Opcional - Gratis):</label>
+          <input type="text" id="qvCustomTextInput" class="form-input" placeholder="Ej: Nombre del fanático, fecha especial, dedicatoria..." maxlength="50" oninput="AppState.selectedModalOptions.customText = this.value">
+        </div>
+      ` : ''}
 
       <!-- Precio Total de la Configuración y CTA -->
       <div style="margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; gap: 16px;">
@@ -421,7 +423,7 @@ function updateModalPrice() {
 
   const basePrice = AppState.activeModalProduct.priceCOP;
   const totalCOP = basePrice + AppState.selectedModalOptions.sizePriceModifier;
-  
+
   priceEl.innerHTML = `
     <span>${formatPrice(totalCOP)}</span>
     ${currentCurrency !== "COP" ? `<span style="font-size: 0.75rem; color: var(--text-muted); display: block; font-weight: normal;">(Base: $${totalCOP.toLocaleString('es-CO')} COP)</span>` : ""}
@@ -432,6 +434,10 @@ function addModalProductToCart() {
   if (!AppState.activeModalProduct) return;
   const circuitSelect = document.getElementById("qvCircuitSelect");
   if (circuitSelect) AppState.selectedModalOptions.circuit = circuitSelect.value;
+
+  if (!AppState.activeModalProduct.hasEngraving) {
+    AppState.selectedModalOptions.customText = "";
+  }
 
   cartManager.addItem(AppState.activeModalProduct, AppState.selectedModalOptions, 1);
   closeQuickView();
