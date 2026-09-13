@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,8 @@
 
   <!-- Open Graph -->
   <meta id="ogTitle" property="og:title" content="WAOU! - Objeto Decorativo">
-  <meta id="ogDescription" property="og:description" content="Diseño y fabricación en PLA Bio-Polímero. Envíos a toda Colombia.">
+  <meta id="ogDescription" property="og:description"
+    content="Diseño y fabricación en PLA Bio-Polímero. Envíos a toda Colombia.">
   <meta id="ogImage" property="og:image" content="logos/WAOU Logo rojo.svg">
 
   <!-- Favicon -->
@@ -18,7 +20,9 @@
   <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
+    rel="stylesheet">
 
   <!-- jsPDF & AutoTable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -88,7 +92,7 @@
       height: 100%;
       object-fit: contain;
       transition: transform var(--transition-smooth);
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.08));
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.08));
     }
 
     .landing-main-image-box:hover .landing-main-image {
@@ -225,18 +229,22 @@
         grid-template-columns: 1fr;
         gap: 32px;
       }
+
       .landing-gallery-container {
         position: static;
       }
+
       .landing-buy-panel {
         padding: 20px;
       }
+
       .mobile-sticky-buy-bar {
         display: flex;
       }
     }
   </style>
 </head>
+
 <body>
 
   <!-- Top Announcement Bar -->
@@ -244,7 +252,8 @@
     <div class="container top-bar-content">
       <div class="top-bar-announcement">
         <span class="flag">🇨🇴</span>
-        <span><strong>Envíos seguros a toda Colombia</strong> | ¿Compras desde el exterior para regalar en Colombia?</span>
+        <span><strong>Envíos seguros a toda Colombia</strong> | ¿Compras desde el exterior para regalar en
+          Colombia?</span>
       </div>
       <div class="top-bar-actions">
         <div class="currency-selector-wrap">
@@ -277,8 +286,10 @@
         </ul>
 
         <div class="nav-actions">
-          <button type="button" class="cart-toggle-btn" onclick="cartManager.openCartDrawer()" aria-label="Abrir carrito">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <button type="button" class="cart-toggle-btn" onclick="cartManager.openCartDrawer()"
+            aria-label="Abrir carrito">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -293,12 +304,12 @@
   <!-- Contenedor Principal de la Landing Page de Producto -->
   <main class="product-landing-wrap">
     <div class="container">
-      
+
       <!-- Migas de pan / Volver -->
       <nav class="breadcrumb-bar" aria-label="Ruta de navegación">
         <a href="index.html">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           Catálogo WAOU!
         </a>
@@ -310,10 +321,10 @@
 
       <!-- Rejilla de Producto: Galería 1:1 + Panel de Compra -->
       <div class="product-landing-grid">
-        
+
         <!-- Galería 1:1 Cuadrada -->
         <div class="landing-gallery-container">
-          <div class="landing-main-image-box">
+          <div id="landingMainMediaContainer" class="landing-main-image-box">
             <div id="landingBadgeWrap" style="position: absolute; top: 16px; left: 16px; z-index: 2;"></div>
             <img id="landingMainImg" src="logos/WAOU Logo rojo.svg" alt="Producto WAOU!" class="landing-main-image">
           </div>
@@ -323,7 +334,7 @@
 
         <!-- Panel de Compra y Especificaciones Técnicas -->
         <div class="landing-buy-panel">
-          
+
           <div>
             <span id="landingCategoryTag" class="section-tag" style="margin-bottom: 6px;">Colección</span>
             <h1 id="landingProductName" class="landing-title">Cargando producto...</h1>
@@ -350,7 +361,8 @@
           <!-- Selector de Circuito F1 si aplica -->
           <div id="landingCircuitGroup" class="option-group" style="display: none;">
             <label class="option-label">1. Selecciona el Circuito / Gran Premio:</label>
-            <select id="landingCircuitSelect" class="form-select" style="font-family: var(--font-mono); font-weight: 600;" onchange="currentOptions.circuit = this.value">
+            <select id="landingCircuitSelect" class="form-select"
+              style="font-family: var(--font-mono); font-weight: 600;" onchange="currentOptions.circuit = this.value">
             </select>
           </div>
 
@@ -367,20 +379,23 @@
           </div>
 
           <!-- Grabado Personalizado -->
-          <div class="option-group">
+          <div id="landingCustomTextGroup" class="option-group" style="display: none;">
             <label class="option-label">Grabado Personalizado en Base (Opcional - Gratis):</label>
-            <input type="text" id="landingCustomTextInput" class="form-input" placeholder="Ej: Nombre, fecha especial o dedicatoria..." maxlength="50">
+            <input type="text" id="landingCustomTextInput" class="form-input"
+              placeholder="Ej: Nombre, fecha especial o dedicatoria..." maxlength="50">
           </div>
 
           <!-- Botones de Acción / Compra Rápida -->
           <div class="landing-actions-group">
-            <button type="button" class="btn-primary" onclick="buyLandingProductNow()" style="width: 100%; padding: 14px; font-size: 0.95rem;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <button type="button" class="btn-primary" onclick="buyLandingProductNow()"
+              style="width: 100%; padding: 14px; font-size: 0.95rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <path d="M16 10a4 4 0 0 1-8 0"></path>
               </svg>
-              Comprar Ahora y Generar Orden en PDF
+              Realziar mi pedido ahora!
             </button>
 
             <button type="button" class="btn-secondary" onclick="addLandingProductToCart()" style="width: 100%;">
@@ -389,7 +404,8 @@
           </div>
 
           <!-- Compartir y Valores Rápidos -->
-          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 8px;">
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border-light); flex-wrap: wrap; gap: 8px;">
             <span style="font-size: 0.78rem; color: var(--accent-green); font-weight: 600;">
               ✓ Envíos protegidos a toda Colombia
             </span>
@@ -412,14 +428,34 @@
     </div>
   </main>
 
+  <!-- ==========================================================================
+       SECCIÓN: PRODUCTOS RECOMENDADOS (VENTA CRUZADA / ALEATORIOS)
+       ========================================================================== -->
+  <section class="related-products-section">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 30px;">
+        <span class="section-tag">Colección Recomendada</span>
+        <h2 class="section-title" style="font-size: 1.55rem;">Las personas que llevaron este producto también llevaron
+        </h2>
+        <p class="section-subtitle" style="font-size: 0.92rem;">Descubre otras piezas de exhibición fabricadas
+          artesanalmente con tecnología 3D.</p>
+      </div>
+      <div id="relatedProductsGrid" class="related-products-grid">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+  </section>
+
   <!-- Barra Fija Inferior en Móvil para Compra Inmediata -->
   <div class="mobile-sticky-buy-bar">
     <div>
-      <span id="mobileStickyPrice" style="font-family: var(--font-mono); font-weight: 700; font-size: 1.15rem; color: var(--accent-red);">$0 COP</span>
+      <span id="mobileStickyPrice"
+        style="font-family: var(--font-mono); font-weight: 700; font-size: 1.15rem; color: var(--accent-red);">$0
+        COP</span>
       <span style="display: block; font-size: 0.7rem; color: var(--text-secondary);">Envío incluido</span>
     </div>
     <button type="button" class="btn-primary btn-sm" onclick="buyLandingProductNow()" style="padding: 10px 18px;">
-      Comprar en WhatsApp
+      Quiero Pedir Uno
     </button>
   </div>
 
@@ -432,6 +468,9 @@
           <p class="footer-text">
             Taller de manufactura y diseño tridimensional en Colombia. Pasión por la Fórmula 1 y el arte decorativo.
           </p>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #D1D5DB;">
+            📍 Fabricación y despacho desde Colombia
+          </div>
         </div>
         <div>
           <h4 class="footer-title">Enlaces</h4>
@@ -444,17 +483,47 @@
         <div>
           <h4 class="footer-title">Medios de Pago</h4>
           <ul class="footer-links">
-            <li class="footer-link">📱 Nequi / Daviplata</li>
-            <li class="footer-link">🏦 Bancolombia Transferencia</li>
-            <li class="footer-link">💳 PSE y Envíos Nacionales</li>
+            <li class="footer-link">📱 Nequi / BRE-B</li>
+            <li class="footer-link">🏦 PAGO EN CASA</li>
+            <li class="footer-link">💳 PSE y MercadoPago</li>
+            <li class="footer-link">📦 Envíos Seguros en Colombia</li>
           </ul>
         </div>
         <div>
-          <h4 class="footer-title">Atención</h4>
-          <p class="footer-text">
-            WhatsApp: +57 323 584 2247<br>
-            Colombia
+          <h4 class="footer-title">Redes & Contacto</h4>
+          <p class="footer-text" style="margin-bottom: 12px;">
+            Síguenos y contáctanos directamente:
           </p>
+          <div class="footer-social-links">
+            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer"
+              class="footer-social-btn instagram" title="Síguenos en Instagram">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              <span>Instagram</span>
+            </a>
+            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" class="footer-social-btn facebook"
+              title="Síguenos en Facebook">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+              <span>Facebook</span>
+            </a>
+            <a href="https://wa.me/573235842247" target="_blank" rel="noopener noreferrer"
+              class="footer-social-btn whatsapp" title="WhatsApp: 3235842247">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                </path>
+              </svg>
+              <span>WhatsApp: 3235842247</span>
+            </a>
+          </div>
         </div>
       </div>
       <div class="footer-bottom">
@@ -489,7 +558,8 @@
       <div class="checkout-modal-header">
         <div>
           <h3 class="checkout-modal-title">Finalizar Orden de Compra</h3>
-          <p class="checkout-modal-subtitle">Generaremos tu PDF formal y la Guía de Despacho para el WhatsApp de WAOU!.</p>
+          <p class="checkout-modal-subtitle">Generaremos tu PDF formal y la Guía de Despacho para el WhatsApp de WAOU!.
+          </p>
         </div>
         <button class="cart-drawer-close-btn" onclick="closeCheckoutModal()">&times;</button>
       </div>
@@ -513,16 +583,20 @@
               <input type="text" id="shipCity" class="form-input" placeholder="Ej: Medellín" required>
             </div>
             <div class="form-group full-width">
-              <label for="shipAddress" class="form-label">Dirección Exacta de Entrega <span class="required">*</span></label>
-              <input type="text" id="shipAddress" class="form-input" placeholder="Ej: Calle 10 # 43E - 20 Apto 402" required>
+              <label for="shipAddress" class="form-label">Dirección Exacta de Entrega <span
+                  class="required">*</span></label>
+              <input type="text" id="shipAddress" class="form-input" placeholder="Ej: Calle 10 # 43E - 20 Apto 402"
+                required>
             </div>
             <div class="form-group">
               <label for="shipEmail" class="form-label">Correo (Opcional)</label>
               <input type="email" id="shipEmail" class="form-input" placeholder="correo@ejemplo.com">
             </div>
             <div class="form-group">
-              <label class="form-label" style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 24px;">
-                <input type="checkbox" id="shipIsGift" style="width: 18px; height: 18px; accent-color: var(--accent-red);">
+              <label class="form-label"
+                style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 24px;">
+                <input type="checkbox" id="shipIsGift"
+                  style="width: 18px; height: 18px; accent-color: var(--accent-red);">
                 <span>🎁 ¿Es un regalo?</span>
               </label>
             </div>
@@ -534,7 +608,7 @@
         </div>
         <div class="checkout-modal-footer">
           <button type="submit" class="btn-whatsapp">
-            Descargar PDF & Enviar Guía por WhatsApp
+            ¡Mi pedido está listo!
           </button>
         </div>
       </form>
@@ -590,26 +664,28 @@
       if (dimEl) dimEl.textContent = currentProduct.dimensions;
       if (matEl) matEl.textContent = currentProduct.material;
       if (descEl) descEl.textContent = currentProduct.description;
-      if (mainImg) mainImg.src = currentProduct.image;
 
-      if (badgeWrap) {
-        if (currentProduct.badge) {
-          const bClass = currentProduct.badge.type === "limited" ? "badge-limited" : "badge-new";
-          badgeWrap.innerHTML = `<span class="${bClass}">${currentProduct.badge.text}</span>`;
-        } else {
-          badgeWrap.innerHTML = "";
-        }
-      }
+      const gallery = currentProduct.gallery && currentProduct.gallery.length > 0 ? currentProduct.gallery : [currentProduct.image];
+      renderMainMedia(gallery[0], currentProduct.name);
 
       // Miniaturas
       const thumbsContainer = document.getElementById("landingThumbsGrid");
-      const gallery = currentProduct.gallery && currentProduct.gallery.length > 0 ? currentProduct.gallery : [currentProduct.image];
       if (thumbsContainer) {
-        thumbsContainer.innerHTML = gallery.map((img, idx) => `
-          <button type="button" class="landing-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="switchLandingImage('${img}', this)">
-            <img src="${img}" alt="${currentProduct.name}">
-          </button>
-        `).join("");
+        thumbsContainer.innerHTML = gallery.map((media, idx) => {
+          const isVid = isVideoFile(media);
+          return `
+            <button type="button" class="landing-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="switchLandingImage('${media}', this)" style="position: relative;" title="${isVid ? 'Ver Video' : currentProduct.name}">
+              ${isVid ? `
+                <video src="${media}#t=0.1" muted playsinline style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;"></video>
+                <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; color: white;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
+              ` : `
+                <img src="${media}" alt="${currentProduct.name}">
+              `}
+            </button>
+          `;
+        }).join("");
       }
 
       // Circuitos F1
@@ -666,18 +742,53 @@
         if (finishGroup) finishGroup.style.display = "none";
       }
 
+      // Grabado Personalizado en Base Condicional
+      const customTextGroup = document.getElementById("landingCustomTextGroup");
+      const customTextInput = document.getElementById("landingCustomTextInput");
+      if (currentProduct.hasEngraving) {
+        if (customTextGroup) customTextGroup.style.display = "block";
+        if (customTextInput) customTextInput.value = "";
+        currentOptions.customText = "";
+      } else {
+        if (customTextGroup) customTextGroup.style.display = "none";
+        if (customTextInput) customTextInput.value = "";
+        currentOptions.customText = "";
+      }
+
       updateLandingPrice();
+      renderRelatedProducts();
     }
 
-    function switchLandingImage(imgSrc, btn) {
-      const mainImg = document.getElementById("landingMainImg");
-      if (mainImg) {
-        mainImg.style.opacity = "0";
-        setTimeout(() => {
-          mainImg.src = imgSrc;
-          mainImg.style.opacity = "1";
-        }, 150);
+    function isVideoFile(url) {
+      if (!url || typeof url !== "string") return false;
+      return /\.(mp4|webm|mov|ogg)($|\?)/i.test(url);
+    }
+
+    function renderMainMedia(mediaSrc, altText = "Producto WAOU!") {
+      const container = document.getElementById("landingMainMediaContainer");
+      if (!container) return;
+
+      const badgeHtml = currentProduct && currentProduct.badge ? `
+        <div id="landingBadgeWrap" style="position: absolute; top: 16px; left: 16px; z-index: 2;">
+          <span class="${currentProduct.badge.type === 'limited' ? 'badge-limited' : 'badge-new'}">${currentProduct.badge.text}</span>
+        </div>
+      ` : `<div id="landingBadgeWrap" style="position: absolute; top: 16px; left: 16px; z-index: 2;"></div>`;
+
+      if (isVideoFile(mediaSrc)) {
+        container.innerHTML = `
+          ${badgeHtml}
+          <video id="landingMainVideo" src="${mediaSrc}" class="landing-main-image" autoplay loop muted playsinline controls style="max-height: 100%; border-radius: var(--radius-sm); outline: none;"></video>
+        `;
+      } else {
+        container.innerHTML = `
+          ${badgeHtml}
+          <img id="landingMainImg" src="${mediaSrc}" alt="${altText}" class="landing-main-image" onerror="this.src='logos/WAOU Logo rojo.svg'">
+        `;
       }
+    }
+
+    function switchLandingImage(mediaSrc, btn) {
+      renderMainMedia(mediaSrc, currentProduct ? currentProduct.name : "Producto WAOU!");
       document.querySelectorAll(".landing-thumb-btn").forEach(b => b.classList.remove("active"));
       if (btn) btn.classList.add("active");
     }
@@ -712,13 +823,80 @@
       if (mobilePriceEl) mobilePriceEl.textContent = formatPrice(totalCOP);
     }
 
+    function renderRelatedProducts() {
+      const container = document.getElementById("relatedProductsGrid");
+      if (!container) return;
+
+      if (!PRODUCTS_DATA || PRODUCTS_DATA.length <= 1) {
+        const section = container.closest(".related-products-section");
+        if (section) section.style.display = "none";
+        return;
+      }
+
+      // Filtrar excluyendo el producto actualmente visualizado
+      const otherProducts = PRODUCTS_DATA.filter(p => p.id !== (currentProduct ? currentProduct.id : ""));
+
+      // Ordenamiento aleatorio (Shuffle)
+      const shuffled = [...otherProducts].sort(() => 0.5 - Math.random());
+
+      // Tomar hasta 3 productos aleatorios
+      const selected = shuffled.slice(0, 3);
+
+      container.innerHTML = selected.map(p => {
+        let badgeHtml = "";
+        if (p.badge) {
+          const bClass = p.badge.type === "limited" ? "badge-limited" : (p.badge.type === "new" ? "badge-new" : "badge-mono");
+          badgeHtml = `<span class="${bClass}">${p.badge.text}</span>`;
+        }
+
+        return `
+          <article class="product-card" data-id="${p.id}">
+            <a href="producto.html?id=${p.id}" class="product-card-img-wrap" aria-label="Ver ${p.name}">
+              <div class="product-badges">
+                ${badgeHtml}
+              </div>
+              <img src="${p.image}" alt="${p.name}" class="product-card-img" loading="lazy" onerror="this.src='logos/WAOU Logo rojo.svg'">
+            </a>
+            <div class="product-card-body">
+              <span class="product-category-meta">${p.categoryName}</span>
+              <h3 class="product-card-title">
+                <a href="producto.html?id=${p.id}" title="${p.name}" style="color: inherit;">
+                  ${p.name}
+                </a>
+              </h3>
+              
+              <div class="product-dimensions-spec">
+                📐 <strong>DIMENSIONES:</strong><br>${p.dimensions}
+              </div>
+
+              <div class="product-card-footer">
+                <div class="product-price-box">
+                  <span class="product-price-main">${formatPrice(p.priceCOP)}</span>
+                  <span class="product-price-secondary">${getSecondaryPriceText(p.priceCOP)}</span>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <a href="producto.html?id=${p.id}" class="btn-primary btn-sm" style="padding: 9px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                    Ver Pieza
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
     function addLandingProductToCart() {
       if (!currentProduct) return;
       const circuitSelect = document.getElementById("landingCircuitSelect");
       if (circuitSelect && currentProduct.circuits) currentOptions.circuit = circuitSelect.value;
 
-      const textInput = document.getElementById("landingCustomTextInput");
-      if (textInput) currentOptions.customText = textInput.value.trim();
+      if (currentProduct.hasEngraving) {
+        const textInput = document.getElementById("landingCustomTextInput");
+        currentOptions.customText = textInput ? textInput.value.trim() : "";
+      } else {
+        currentOptions.customText = "";
+      }
 
       cartManager.addItem(currentProduct, currentOptions, 1);
     }
@@ -772,8 +950,10 @@
 
       document.addEventListener("waou:currencyChange", () => {
         updateLandingPrice();
+        renderRelatedProducts();
       });
     });
   </script>
 </body>
+
 </html>

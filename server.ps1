@@ -32,6 +32,11 @@ while ($listener.IsListening) {
             ".jpeg" { $contentType = "image/jpeg" }
             ".png"  { $contentType = "image/png" }
             ".webp" { $contentType = "image/webp" }
+            ".gif"  { $contentType = "image/gif" }
+            ".mp4"  { $contentType = "video/mp4" }
+            ".webm" { $contentType = "video/webm" }
+            ".mov"  { $contentType = "video/quicktime" }
+            ".ogg"  { $contentType = "video/ogg" }
         }
         
         $response.ContentType = $contentType
