@@ -568,37 +568,61 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="shipName" class="form-label">Nombre y Apellido <span class="required">*</span></label>
-              <input type="text" id="shipName" class="form-input" placeholder="Ej: Carlos Gómez" required>
+              <input type="text" id="shipName" class="form-input" placeholder="Ej: Carlos Gómez" required autocomplete="name">
             </div>
             <div class="form-group">
               <label for="shipPhone" class="form-label">WhatsApp / Celular <span class="required">*</span></label>
-              <input type="tel" id="shipPhone" class="form-input" placeholder="Ej: 300 123 4567" required>
+              <input type="tel" id="shipPhone" class="form-input" placeholder="Ej: 300 123 4567" required autocomplete="tel">
             </div>
             <div class="form-group">
               <label for="shipDepartment" class="form-label">Departamento <span class="required">*</span></label>
-              <input type="text" id="shipDepartment" class="form-input" placeholder="Ej: Antioquia" required>
+              <input type="text" id="shipDepartment" list="departmentsList" class="form-input" placeholder="Escribe o selecciona (Ej: Antioquia)" required autocomplete="off">
+              <datalist id="departmentsList"></datalist>
             </div>
             <div class="form-group">
-              <label for="shipCity" class="form-label">Ciudad <span class="required">*</span></label>
-              <input type="text" id="shipCity" class="form-input" placeholder="Ej: Medellín" required>
+              <label for="shipCity" class="form-label">Ciudad / Municipio <span class="required">*</span></label>
+              <input type="text" id="shipCity" list="citiesList" class="form-input" placeholder="Escribe o selecciona (Ej: Medellín)" required autocomplete="off">
+              <datalist id="citiesList"></datalist>
             </div>
             <div class="form-group full-width">
-              <label for="shipAddress" class="form-label">Dirección Exacta de Entrega <span
+              <label for="shipAddress" class="form-label">Dirección Principal de Entrega <span
                   class="required">*</span></label>
-              <input type="text" id="shipAddress" class="form-input" placeholder="Ej: Calle 10 # 43E - 20 Apto 402"
-                required>
+              <input type="text" id="shipAddress" class="form-input" placeholder="Ej: Calle 10 # 43E - 20, Barrio El Poblado"
+                required autocomplete="street-address">
             </div>
-            <div class="form-group">
-              <label for="shipEmail" class="form-label">Correo (Opcional)</label>
-              <input type="email" id="shipEmail" class="form-input" placeholder="correo@ejemplo.com">
+            <div class="form-group full-width">
+              <label for="shipApartment" class="form-label">Nombre del conjunto / Torre / Apto (Opcional)</label>
+              <input type="text" id="shipApartment" class="form-input" placeholder="Ej: Conjunto Los Rosales, Torre 3, Apto 502">
             </div>
-            <div class="form-group">
-              <label class="form-label"
-                style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 24px;">
-                <input type="checkbox" id="shipIsGift"
-                  style="width: 18px; height: 18px; accent-color: var(--accent-red);">
-                <span>🎁 ¿Es un regalo?</span>
-              </label>
+            <div class="form-group full-width">
+              <label for="shipEmail" class="form-label">Correo Electrónico (Opcional)</label>
+              <input type="email" id="shipEmail" class="form-input" placeholder="correo@ejemplo.com" autocomplete="email">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Opciones del Pedido</label>
+              <div class="checkout-options-grid">
+                <label class="checkout-option-card" for="shipIsGift">
+                  <input type="checkbox" id="shipIsGift" class="checkout-option-input">
+                  <div class="checkout-option-content">
+                    <span class="checkout-option-icon">🎁</span>
+                    <div>
+                      <span class="checkout-option-title">¿Es un regalo?</span>
+                      <span class="checkout-option-desc">Sin precios impresos en paquete</span>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="checkout-option-card" for="shipPayOnDelivery">
+                  <input type="checkbox" id="shipPayOnDelivery" class="checkout-option-input">
+                  <div class="checkout-option-content">
+                    <span class="checkout-option-icon">🏠</span>
+                    <div>
+                      <span class="checkout-option-title">Pago en casa</span>
+                      <span class="checkout-option-desc">Contra entrega al recibir pedido</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
             </div>
             <div class="form-group full-width">
               <label for="shipNotes" class="form-label">Notas / Instrucciones</label>
@@ -618,6 +642,7 @@
   <!-- Scripts -->
   <script src="js/products.js"></script>
   <script src="js/currency.js"></script>
+  <script src="js/colombia-data.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/order-pdf.js"></script>
 
@@ -925,15 +950,28 @@
       const department = document.getElementById("shipDepartment").value.trim();
       const city = document.getElementById("shipCity").value.trim();
       const address = document.getElementById("shipAddress").value.trim();
+      const apartment = (document.getElementById("shipApartment")?.value || "").trim();
       const notes = document.getElementById("shipNotes").value.trim();
-      const isGift = document.getElementById("shipIsGift").checked;
+      const isGift = document.getElementById("shipIsGift")?.checked || false;
+      const payOnDelivery = document.getElementById("shipPayOnDelivery")?.checked || false;
 
       if (!name || !phone || !department || !city || !address) {
         alert("Por favor completa los campos obligatorios (*)");
         return;
       }
 
-      processOrderCheckout({ name, phone, email, department, city, address, notes, isGift });
+      processOrderCheckout({
+        name,
+        phone,
+        email,
+        department,
+        city,
+        address,
+        apartment,
+        notes,
+        isGift,
+        payOnDelivery
+      });
     }
 
     function copyLandingLink() {

@@ -3,6 +3,7 @@ $urls = @(
     "http://localhost:8080/js/app.js",
     "http://localhost:8080/js/products.js",
     "http://localhost:8080/js/currency.js",
+    "http://localhost:8080/js/colombia-data.js",
     "http://localhost:8080/js/cart.js",
     "http://localhost:8080/js/order-pdf.js",
     "http://localhost:8080/logos/WAOU%20Logo%20rojo.svg",

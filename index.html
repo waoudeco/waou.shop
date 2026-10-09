@@ -32,24 +32,6 @@
 
   <!-- Estilos del Sistema de Diseño -->
   <link rel="stylesheet" href="styles.css">
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '375090845347467');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=375090845347467&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
 </head>
 
 <body>
@@ -602,44 +584,71 @@ src="https://www.facebook.com/tr?id=375090845347467&ev=PageView&noscript=1"
           <div class="form-grid">
             <div class="form-group">
               <label for="shipName" class="form-label">Nombre y Apellido <span class="required">*</span></label>
-              <input type="text" id="shipName" class="form-input" placeholder="Ej: Carlos Gómez" required>
+              <input type="text" id="shipName" class="form-input" placeholder="Ej: Carlos Gómez" required autocomplete="name">
             </div>
 
             <div class="form-group">
               <label for="shipPhone" class="form-label">WhatsApp / Celular <span class="required">*</span></label>
-              <input type="tel" id="shipPhone" class="form-input" placeholder="Ej: 300 123 4567" required>
+              <input type="tel" id="shipPhone" class="form-input" placeholder="Ej: 300 123 4567" required autocomplete="tel">
             </div>
 
             <div class="form-group">
               <label for="shipDepartment" class="form-label">Departamento <span class="required">*</span></label>
-              <input type="text" id="shipDepartment" class="form-input"
-                placeholder="Ej: Antioquia, Cundinamarca, Valle..." required>
+              <input type="text" id="shipDepartment" list="departmentsList" class="form-input"
+                placeholder="Escribe o selecciona (Ej: Antioquia)" required autocomplete="off">
+              <datalist id="departmentsList"></datalist>
             </div>
 
             <div class="form-group">
               <label for="shipCity" class="form-label">Ciudad / Municipio <span class="required">*</span></label>
-              <input type="text" id="shipCity" class="form-input" placeholder="Ej: Medellín, Bogotá, Cali..." required>
+              <input type="text" id="shipCity" list="citiesList" class="form-input"
+                placeholder="Escribe o selecciona (Ej: Medellín)" required autocomplete="off">
+              <datalist id="citiesList"></datalist>
             </div>
 
             <div class="form-group full-width">
-              <label for="shipAddress" class="form-label">Dirección Exacta de Entrega <span
+              <label for="shipAddress" class="form-label">Dirección Principal de Entrega <span
                   class="required">*</span></label>
               <input type="text" id="shipAddress" class="form-input"
-                placeholder="Ej: Calle 101 # 43E - 20 Apto 402, Barrio El Poblado" required>
+                placeholder="Ej: Calle 101 # 43E - 20, Barrio El Poblado" required autocomplete="street-address">
             </div>
 
-            <div class="form-group">
+            <div class="form-group full-width">
+              <label for="shipApartment" class="form-label">Nombre del conjunto / Torre / Apto (Opcional)</label>
+              <input type="text" id="shipApartment" class="form-input"
+                placeholder="Ej: Conjunto Los Rosales, Torre 3, Apto 502">
+            </div>
+
+            <div class="form-group full-width">
               <label for="shipEmail" class="form-label">Correo Electrónico (Opcional)</label>
-              <input type="email" id="shipEmail" class="form-input" placeholder="tucorreo@ejemplo.com">
+              <input type="email" id="shipEmail" class="form-input" placeholder="waoudeco@gmail.com" autocomplete="email">
             </div>
 
-            <div class="form-group">
-              <label class="form-label"
-                style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 24px;">
-                <input type="checkbox" id="shipIsGift"
-                  style="width: 18px; height: 18px; accent-color: var(--accent-red);">
-                <span>🎁 ¿Es un regalo para alguien más?</span>
-              </label>
+            <div class="form-group full-width">
+              <label class="form-label">Opciones del Pedido</label>
+              <div class="checkout-options-grid">
+                <label class="checkout-option-card" for="shipIsGift">
+                  <input type="checkbox" id="shipIsGift" class="checkout-option-input">
+                  <div class="checkout-option-content">
+                    <span class="checkout-option-icon">🎁</span>
+                    <div>
+                      <span class="checkout-option-title">¿Es un regalo?</span>
+                      <span class="checkout-option-desc">Sin precios impresos en el paquete</span>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="checkout-option-card" for="shipPayOnDelivery">
+                  <input type="checkbox" id="shipPayOnDelivery" class="checkout-option-input">
+                  <div class="checkout-option-content">
+                    <span class="checkout-option-icon">🏠</span>
+                    <div>
+                      <span class="checkout-option-title">Pago en casa</span>
+                      <span class="checkout-option-desc">Contra entrega al recibir pedido</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
             </div>
 
             <div class="form-group full-width">
@@ -683,6 +692,7 @@ src="https://www.facebook.com/tr?id=375090845347467&ev=PageView&noscript=1"
   <!-- Scripts Modulares -->
   <script src="js/products.js"></script>
   <script src="js/currency.js"></script>
+  <script src="js/colombia-data.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/order-pdf.js"></script>
   <script src="js/app.js"></script>
