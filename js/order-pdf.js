@@ -8,7 +8,8 @@ const WAOU_CONFIG = {
   whatsappNumber: "573235842247",
   contactPhone: "+57 323 584 2247",
   city: "Colombia",
-  instagram: "@waoushop"
+  instagram: "@waoushop",
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbyFt1m6PuOnyhsvNXpv_T5iHTLNbzvFXXEpMQdDawzKfWs6jBV7oz5opALLxL9QLt3NBg/exec"
 };
 
 function generateOrderNumber() {
@@ -18,19 +19,101 @@ function generateOrderNumber() {
 }
 
 // ---------------------------------------------------------------------
-// NUEVA FUNCIÓN: Notificación Instantánea a tu Celular vía ntfy.sh
+// NOTIFICACIÓN DE RESPALDO POR CORREO (Google Apps Script + PDF Base64)
+// ---------------------------------------------------------------------
+async function sendEmailBackup(customerData, cartItems, orderNumber, pdfBase64) {
+  try {
+    const totalCOP = cartItems.reduce((sum, item) => sum + (item.unitPriceCOP * item.quantity), 0);
+
+    // Resumen detallado de productos
+    const itemsSummary = cartItems.map((item, i) => {
+      let details = [];
+      if (item.circuit) details.push(`GP: ${item.circuit}`);
+      if (item.size && item.size !== "Estándar") details.push(`Medida: ${item.size}`);
+      if (item.finish) details.push(`Color: ${item.finish}`);
+      if (item.customText) details.push(`Grabado: "${item.customText}"`);
+      const detailsStr = details.length > 0 ? ` (${details.join(', ')})` : '';
+      return `${i + 1}. ${item.name}${detailsStr} x${item.quantity} - $${(item.unitPriceCOP * item.quantity).toLocaleString('es-CO')} COP`;
+    }).join('\n');
+
+    const fullAddress = customerData.apartment 
+      ? `${customerData.address} - ${customerData.apartment}`
+      : customerData.address;
+
+    const payload = {
+      orderNumber: orderNumber,
+      numeroOrden: orderNumber,
+      name: customerData.name,
+      nombre: customerData.name,
+      phone: customerData.phone,
+      telefono: customerData.phone,
+      email: customerData.email || "",
+      correo: customerData.email || "",
+      department: customerData.department,
+      departamento: customerData.department,
+      city: customerData.city,
+      ciudad: customerData.city,
+      address: customerData.address,
+      direccion: customerData.address,
+      apartment: customerData.apartment || "",
+      conjuntoApto: customerData.apartment || "",
+      fullAddress: fullAddress,
+      direccionCompleta: fullAddress,
+      notes: customerData.notes || "",
+      notas: customerData.notes || "",
+      isGift: customerData.isGift || false,
+      esRegalo: customerData.isGift ? "Sí" : "No",
+      payOnDelivery: customerData.payOnDelivery || false,
+      pagoEnCasa: customerData.payOnDelivery ? "Sí" : "No",
+      paymentMethod: customerData.payOnDelivery ? "Pago en casa (Contra entrega)" : "Transferencia / Anticipado",
+      metodoPago: customerData.payOnDelivery ? "Pago en casa (Contra entrega)" : "Transferencia / Anticipado",
+      total: totalCOP,
+      totalCOP: totalCOP,
+      totalFormatted: `$${totalCOP.toLocaleString('es-CO')} COP`,
+      summary: itemsSummary,
+      resumen: itemsSummary,
+      items: cartItems,
+      productos: cartItems,
+      pdfBase64: pdfBase64 || "",
+      pdf: pdfBase64 || "",
+      base64: pdfBase64 || "",
+      filename: `Orden_Compra_${orderNumber}.pdf`,
+      fileName: `Orden_Compra_${orderNumber}.pdf`,
+      nombreArchivo: `Orden_Compra_${orderNumber}.pdf`,
+      mimeType: "application/pdf"
+    };
+
+    const targetUrl = WAOU_CONFIG.googleScriptUrl;
+
+    // Enviar petición POST asíncrona en modo no-cors para no bloquear la ejecución del cliente
+    fetch(targetUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    }).catch(err => {
+      console.warn("Aviso al enviar respaldo de correo a Google Apps Script:", err);
+    });
+
+  } catch (err) {
+    console.error("Error preparando el respaldo por correo:", err);
+  }
+}
+
+// ---------------------------------------------------------------------
+// NOTIFICACIÓN PUSH CELULAR (ntfy.sh)
 // ---------------------------------------------------------------------
 async function notifyNewOrder(customerData, cartItems, orderNumber) {
   try {
     const total = cartItems.reduce((sum, item) => sum + (item.unitPriceCOP * item.quantity), 0);
+    let tagBadge = "";
+    if (customerData.isGift) tagBadge = " 🎁 [Regalo]";
+    if (customerData.payOnDelivery) tagBadge = " 🏠 [Pago en Casa]";
 
-    // Asigna un nombre único para tu canal (ej: waou_pedidos_123)
-    const topic = "waou_ventas_secretas_88";
+    const message = `🚨 VENTA #${orderNumber}${tagBadge}\nCliente: ${customerData.name}\nTel: ${customerData.phone}\nCiudad: ${customerData.city} (${customerData.department})\nTotal: $${total.toLocaleString("es-CO")} COP`;
 
-    // Mensaje limpio en texto
-    const message = `🚨 VENTA #${orderNumber}\nCliente: ${customerData.name}\nTel: ${customerData.phone}\nCiudad: ${customerData.city}\nTotal: $${total.toLocaleString("es-CO")} COP`;
-
-    // Enviar petición compatible con navegadores (evita CORS)
     await fetch("https://ntfy.sh/amorventawaou", {
       method: "POST",
       mode: "no-cors",
@@ -145,7 +228,8 @@ async function generateOrderPDF(customerData, cartItems, orderNumber) {
   doc.setFont("helvetica", "bold");
   doc.text("Dirección:", 110, 56);
   doc.setFont("helvetica", "normal");
-  doc.text(`${customerData.address}`, 128, 56);
+  const fullAddressPdf = customerData.apartment ? `${customerData.address} (${customerData.apartment})` : customerData.address;
+  doc.text(fullAddressPdf.substring(0, 46), 128, 56);
 
   doc.setFont("helvetica", "bold");
   doc.text("Notas / Guía:", 110, 62);
@@ -157,6 +241,10 @@ async function generateOrderPDF(customerData, cartItems, orderNumber) {
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...primaryRed);
     doc.text("🎁 PEDIDO PARA REGALO (No incluir precios impresos en el paquete)", 18, 70);
+  } else if (customerData.payOnDelivery) {
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(16, 185, 129); // Verde
+    doc.text("🏠 PAGO EN CASA / CONTRA ENTREGA (Cobro del pedido al recibir en destino)", 18, 70);
   }
 
   // 5. Tabla de Productos (jsPDF AutoTable)
@@ -268,17 +356,31 @@ async function generateOrderPDF(customerData, cartItems, orderNumber) {
   doc.text("WAOU! - Piezas decorativas de precisión, arte y pasión por los detalles.", 105, 285, { align: "center" });
   doc.text("Fabricación y despacho desde Colombia.", 105, 289, { align: "center" });
 
-  // Guardar PDF
+  // Guardar PDF en el navegador del cliente
   const filename = `Orden_Compra_${orderNumber}.pdf`;
   doc.save(filename);
+
+  // Extraer Base64 del PDF generado para envío por correo
+  let pdfBase64 = "";
+  try {
+    const dataUri = doc.output("datauristring");
+    pdfBase64 = dataUri.split(",")[1] || dataUri;
+  } catch (e) {
+    try {
+      const dataUri = doc.output("dataurlstring");
+      pdfBase64 = dataUri.split(",")[1] || dataUri;
+    } catch (e2) {
+      console.error("Error al extraer Base64 del PDF:", e2);
+    }
+  }
+
+  return { doc, filename, pdfBase64 };
 }
 
 /**
  * Genera el enlace de WhatsApp estructurado con la GUÍA DE DESPACHO
  */
 function buildWhatsAppUrl(customerData, cartItems, orderNumber) {
-  const phoneNumber = "573000000000"; // Reemplaza por tu número de WhatsApp
-
   const totalCOP = cartItems.reduce((sum, item) => sum + (item.unitPriceCOP * item.quantity), 0);
 
   let itemsListText = "";
@@ -305,8 +407,13 @@ function buildWhatsAppUrl(customerData, cartItems, orderNumber) {
   message += `• *Departamento:* ${customerData.department}\n`;
   message += `• *Ciudad / Municipio:* ${customerData.city}\n`;
   message += `• *Dirección Exacta:* ${customerData.address}\n`;
+  if (customerData.apartment) message += `• *Conjunto / Torre / Apto:* ${customerData.apartment}\n`;
   if (customerData.notes) message += `• *Observaciones / Notas:* ${customerData.notes}\n`;
-  if (customerData.isGift) message += `• 🎁 *ES UN REGALO* (Por favor despachar sin precios impresos)\n`;
+  if (customerData.isGift) {
+    message += `• 🎁 *ES UN REGALO* (Por favor despachar sin precios impresos)\n`;
+  } else if (customerData.payOnDelivery) {
+    message += `• 🏠 *MÉTODO DE PAGO:* Pago en casa (Contra entrega)\n`;
+  }
 
   // codificación obligatoria para preservar emojis (\uFFFF) y saltos de línea (\n)
   const encodedMessage = encodeURIComponent(message);
@@ -323,15 +430,20 @@ async function processOrderCheckout(customerData) {
   const orderNumber = generateOrderNumber();
 
   try {
-    // -----------------------------------------------------------------
-    // LLAMADA A LA NOTIFICACIÓN PUSH (Te avisa apenas presionan Checkout)
-    // -----------------------------------------------------------------
+    // 1. Notificación Push a Celular (ntfy.sh)
     notifyNewOrder(customerData, cartManager.items, orderNumber);
 
-    await generateOrderPDF(customerData, cartManager.items, orderNumber);
+    // 2. Generar PDF, descargarlo en el navegador y obtener su Base64
+    const { pdfBase64 } = await generateOrderPDF(customerData, cartManager.items, orderNumber);
+
+    // 3. Respaldo por Correo vía Google Apps Script (asíncrono, no bloqueante, con PDF adjunto en Base64)
+    sendEmailBackup(customerData, cartManager.items, orderNumber, pdfBase64);
+
+    // 4. Preparar enlace de WhatsApp y notificación al usuario
     const waUrl = buildWhatsAppUrl(customerData, cartManager.items, orderNumber);
     cartManager.showToast(`¡Orden #${orderNumber} generada y descargada!`);
 
+    // 5. Redireccionar a WhatsApp
     setTimeout(() => {
       window.open(waUrl, "_blank");
     }, 900);

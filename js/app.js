@@ -482,8 +482,10 @@ function handleCheckoutFormSubmit(e) {
   const department = document.getElementById("shipDepartment").value.trim();
   const city = document.getElementById("shipCity").value.trim();
   const address = document.getElementById("shipAddress").value.trim();
+  const apartment = (document.getElementById("shipApartment")?.value || "").trim();
   const notes = document.getElementById("shipNotes").value.trim();
-  const isGift = document.getElementById("shipIsGift").checked;
+  const isGift = document.getElementById("shipIsGift")?.checked || false;
+  const payOnDelivery = document.getElementById("shipPayOnDelivery")?.checked || false;
 
   if (!name || !phone || !department || !city || !address) {
     alert("Por favor completa los campos obligatorios marcados con asterisco (*).");
@@ -497,8 +499,10 @@ function handleCheckoutFormSubmit(e) {
     department,
     city,
     address,
+    apartment,
     notes,
-    isGift
+    isGift,
+    payOnDelivery
   };
 
   processOrderCheckout(customerData);
